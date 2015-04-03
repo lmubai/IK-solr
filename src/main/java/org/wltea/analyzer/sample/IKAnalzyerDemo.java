@@ -40,8 +40,8 @@
        if (ts != null)
          try {
            ts.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+           ioe.printStackTrace();
          }
      }
      finally

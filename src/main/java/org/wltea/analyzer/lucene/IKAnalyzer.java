@@ -28,9 +28,9 @@
      this.useSmart = useSmart;
    }
  
-   protected Analyzer.TokenStreamComponents createComponents(String fieldName, Reader in)
+   protected Analyzer.TokenStreamComponents createComponents(String fieldName)
    {
-     Tokenizer _IKTokenizer = new IKTokenizer(in, useSmart());
+     Tokenizer _IKTokenizer = new IKTokenizer(useSmart());
      return new Analyzer.TokenStreamComponents(_IKTokenizer);
    }
  }

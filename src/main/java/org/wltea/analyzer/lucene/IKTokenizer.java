@@ -6,6 +6,7 @@
  import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
  import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
  import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+ import org.apache.lucene.util.AttributeFactory;
  import org.wltea.analyzer.core.IKSegmenter;
  import org.wltea.analyzer.core.Lexeme;
  
@@ -17,16 +18,23 @@
    private final TypeAttribute typeAtt;
    private int endPosition;
  
-   public IKTokenizer(Reader in, boolean useSmart)
+   public IKTokenizer(AttributeFactory factory, boolean useSmart)
    {
-     super(in);
+     super(factory);
      this.offsetAtt = ((OffsetAttribute)addAttribute(OffsetAttribute.class));
      this.termAtt = ((CharTermAttribute)addAttribute(CharTermAttribute.class));
      this.typeAtt = ((TypeAttribute)addAttribute(TypeAttribute.class));
      this._IKImplement = new IKSegmenter(this.input, useSmart);
    }
- 
-   public boolean incrementToken()
+
+     public IKTokenizer(boolean useSmart) {
+         this.offsetAtt = ((OffsetAttribute)addAttribute(OffsetAttribute.class));
+         this.termAtt = ((CharTermAttribute)addAttribute(CharTermAttribute.class));
+         this.typeAtt = ((TypeAttribute)addAttribute(TypeAttribute.class));
+         this._IKImplement = new IKSegmenter(this.input, useSmart);
+     }
+
+     public boolean incrementToken()
      throws IOException
    {
      clearAttributes();

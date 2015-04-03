@@ -4,6 +4,7 @@
  import java.io.PrintStream;
  import org.apache.lucene.analysis.Analyzer;
  import org.apache.lucene.document.Document;
+ import org.apache.lucene.document.Field;
  import org.apache.lucene.document.Field.Store;
  import org.apache.lucene.document.StringField;
  import org.apache.lucene.document.TextField;
@@ -43,7 +44,7 @@
      {
        directory = new RAMDirectory();
  
-       IndexWriterConfig iwConfig = new IndexWriterConfig(Version.LUCENE_40, analyzer);
+       IndexWriterConfig iwConfig = new IndexWriterConfig(analyzer);
        iwConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
        iwriter = new IndexWriter(directory, iwConfig);
  
