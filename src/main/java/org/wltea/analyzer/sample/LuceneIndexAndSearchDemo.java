@@ -59,7 +59,7 @@
  
        String keyword = "中文分词工具包";
  
-       QueryParser qp = new QueryParser(Version.LUCENE_40, fieldName, analyzer);
+       QueryParser qp = new QueryParser(fieldName, analyzer);
        qp.setDefaultOperator(QueryParser.AND_OPERATOR);
        Query query = qp.parse(keyword);
        System.out.println("Query = " + query);
@@ -79,15 +79,15 @@
        if (ireader != null) {
          try {
            ireader.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
        }
        if (directory != null)
          try {
            directory.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
      }
      catch (LockObtainFailedException e)
@@ -97,15 +97,15 @@
        if (ireader != null) {
          try {
            ireader.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
        }
        if (directory != null)
          try {
            directory.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
      }
      catch (IOException e)
@@ -115,15 +115,15 @@
        if (ireader != null) {
          try {
            ireader.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
        }
        if (directory != null)
          try {
            directory.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
      }
      catch (ParseException e)
@@ -133,15 +133,15 @@
        if (ireader != null) {
          try {
            ireader.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
        }
        if (directory != null)
          try {
            directory.close();
-         } catch (IOException e) {
-           e.printStackTrace();
+         } catch (IOException ioe) {
+             ioe.printStackTrace();
          }
      }
      finally
