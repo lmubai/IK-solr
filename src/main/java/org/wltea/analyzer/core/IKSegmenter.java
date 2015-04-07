@@ -45,7 +45,9 @@
    private List<ISegmenter> loadSegmenters()
    {
      List segmenters = new ArrayList(4);
- 
+
+     segmenters.add(new LaTexSegmenter());
+
      segmenters.add(new LetterSegmenter());
  
      segmenters.add(new CN_QuantifierSegmenter());

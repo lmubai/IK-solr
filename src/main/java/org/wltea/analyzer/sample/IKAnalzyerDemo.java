@@ -18,7 +18,7 @@
  
      TokenStream ts = null;
      try {
-       ts = analyzer.tokenStream("myfield", new StringReader("这是一个中文分词的例子，你可以直接运行它！IKAnalyer can analysis english text too"));
+       ts = analyzer.tokenStream("myfield", new StringReader("1,2"));
  
        OffsetAttribute offset = (OffsetAttribute)ts.addAttribute(OffsetAttribute.class);
  
