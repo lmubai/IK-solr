@@ -260,7 +260,8 @@ class AnalyzeContext {
 		int index = 0;
 		for( ; index <= this.cursor ;){
 			//跳过非CJK字符
-			if(CharacterUtil.CHAR_USELESS == this.charTypes[index]){
+			//但不跳过LaTeX字符
+			if(CharacterUtil.CHAR_USELESS == this.charTypes[index] && !(this.getCurrentChar()>=32 && this.getCurrentChar()<=126) ){
 				index++;
 				continue;
 			}

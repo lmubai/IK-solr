@@ -32,6 +32,8 @@ package org.wltea.analyzer.core;
 class CharacterUtil {
 	
 	public static final int CHAR_USELESS = 0;
+
+	public static final int CHAR_ASIIC32_126 = 1;
 	
 	public static final int CHAR_ARABIC = 0X00000001;
 	
