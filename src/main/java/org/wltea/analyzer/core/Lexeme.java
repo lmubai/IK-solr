@@ -38,8 +38,6 @@ public class Lexeme implements Comparable<Lexeme> {
     public static final int TYPE_LETTER = 3;
     //中文词元
     public static final int TYPE_CNWORD = 4;
-    //LaTeX词元
-    public static final int TYPE_LATEX = 5;
     //中文单字
     public static final int TYPE_CNCHAR = 64;
     //日韩文字
@@ -234,9 +232,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
             case TYPE_CNCHAR:
                 return "CN_CHAR";
-
-            case TYPE_LATEX:
-                return "LATEX";
 
             case TYPE_OTHER_CJK:
                 return "OTHER_CJK";
