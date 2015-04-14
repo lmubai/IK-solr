@@ -1,31 +1,30 @@
 /**
  * IK 中文分词  版本 5.0
  * IK Analyzer release 5.0
- *
+ * <p/>
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * <p/>
  * 源代码由林良益(linliangyi2005@gmail.com)提供
  * 版权声明 2012，乌龙茶工作室
  * provided by Linliangyi and copyright 2012 by Oolong studio
- *
  */
 package org.wltea.analyzer.core;
 
 /**
- * IK词元对象
+ * IK词元对象 
  */
 public class Lexeme implements Comparable<Lexeme> {
     //lexemeType常量
@@ -53,16 +52,19 @@ public class Lexeme implements Comparable<Lexeme> {
     public static final int TYPE_CQUAN = 48;
 
     //词元的起始位移
-    private int offset;
+    protected int offset;
     //词元的相对起始位置
-    private int begin;
+    protected int begin;
     //词元的长度
-    private int length;
+    protected int length;
     //词元文本
-    private String lexemeText;
+    protected String lexemeText;
     //词元类型
-    private int lexemeType;
+    protected int lexemeType;
 
+    public Lexeme() {
+        super();
+    }
 
     public Lexeme(int offset, int begin, int length, int lexemeType) {
         this.offset = offset;
@@ -149,7 +151,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元在文本中的起始位置
-     *
      * @return int
      */
     public int getBeginPosition() {
@@ -162,7 +163,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元在文本中的结束位置
-     *
      * @return int
      */
     public int getEndPosition() {
@@ -171,7 +171,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元的字符长度
-     *
      * @return int
      */
     public int getLength() {
@@ -187,7 +186,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元的文本内容
-     *
      * @return String
      */
     public String getLexemeText() {
@@ -209,7 +207,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元类型
-     *
      * @return int
      */
     public int getLexemeType() {
@@ -218,7 +215,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 获取词元类型标示字符串
-     *
      * @return String
      */
     public String getLexemeTypeString() {
@@ -236,11 +232,11 @@ public class Lexeme implements Comparable<Lexeme> {
             case TYPE_CNWORD:
                 return "CN_WORD";
 
-            case TYPE_LATEX:
-                return "LATEX";
-
             case TYPE_CNCHAR:
                 return "CN_CHAR";
+
+            case TYPE_LATEX:
+                return "LATEX";
 
             case TYPE_OTHER_CJK:
                 return "OTHER_CJK";
@@ -266,7 +262,6 @@ public class Lexeme implements Comparable<Lexeme> {
 
     /**
      * 合并两个相邻的词元
-     *
      * @param l
      * @param lexemeType
      * @return boolean 词元是否成功合并
