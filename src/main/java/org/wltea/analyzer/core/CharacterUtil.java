@@ -32,8 +32,6 @@ package org.wltea.analyzer.core;
 class CharacterUtil {
 	
 	public static final int CHAR_USELESS = 0;
-
-	public static final int CHAR_LATEX = 1;
 	
 	public static final int CHAR_ARABIC = 0X00000001;
 	
@@ -78,8 +76,6 @@ class CharacterUtil {
 				
 			}
 		}
-		if(input>=32 && input<=126)
-			return CHAR_LATEX;
 		//其他的不做处理的字符
 		return CHAR_USELESS;
 	}
