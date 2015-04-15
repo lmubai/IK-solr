@@ -102,7 +102,7 @@ class CharacterUtil {
      * 自定义词典支持的符号,特殊符号字符集
      */
     public static boolean acceptChar(char input) {
-        if (input == 0x0020)
+        if (input <= 0x0020)//不保护空白字符
             return false;
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
         if (ub == Character.UnicodeBlock.BASIC_LATIN //0020-007F	基本拉丁文
@@ -118,9 +118,5 @@ class CharacterUtil {
             return true;
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(acceptChar('‖'));
     }
 }
