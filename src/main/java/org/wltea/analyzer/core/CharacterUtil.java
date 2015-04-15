@@ -26,14 +26,11 @@
 package org.wltea.analyzer.core;
 
 /**
- *
  * 字符集识别工具类
  */
 class CharacterUtil {
 
     public static final int CHAR_USELESS = 0;
-
-    public static final int CHAR_CUSTOM = 1;//自定义符号
 
     public static final int CHAR_ARABIC = 0X00000001;
 
@@ -45,6 +42,7 @@ class CharacterUtil {
 
     /**
      * 识别字符类型
+     *
      * @param input
      * @return int CharacterUtil定义的字符类型常量
      */
@@ -82,6 +80,7 @@ class CharacterUtil {
 
     /**
      * 进行字符规格化（全角转半角，大写转小写处理）
+     *
      * @param input
      * @return char
      */
@@ -113,9 +112,15 @@ class CharacterUtil {
                 || ub == Character.UnicodeBlock.ARROWS //2190-21FF 箭头符号
                 || ub == Character.UnicodeBlock.MATHEMATICAL_OPERATORS //2200-22FF 数学运算符
                 || ub == Character.UnicodeBlock.GEOMETRIC_SHAPES //25A0-25FF 几何图形
+                || input == 0x2016 || (input >= 0x2030 && input <= 0x2034) //‖‰	‱	′	″	‴
+                || (input >= 0x2160 || input <= 0x216B) //Ⅰ	Ⅱ	Ⅲ	Ⅳ	Ⅴ	Ⅵ	Ⅶ	Ⅷ	Ⅸ	Ⅹ	Ⅺ	Ⅻ
                 ) {
             return true;
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(acceptChar('‖'));
     }
 }

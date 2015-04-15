@@ -191,6 +191,7 @@ class DictSegment implements Comparable<DictSegment>{
 		Character keyChar = charMap.get(beginChar);
 		//字典中没有该字，则将其添加入字典
 		if(keyChar == null){
+			System.out.println(beginChar);
 			charMap.put(beginChar, beginChar);
 			keyChar = beginChar;
 		}

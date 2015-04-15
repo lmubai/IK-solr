@@ -302,6 +302,9 @@ class AnalyzeContext {
         } else if (CharacterUtil.CHAR_OTHER_CJK == this.charTypes[index]) {
             Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
             this.results.add(singleCharLexeme);
+        } else if(CharacterUtil.acceptChar(this.getSegmentBuff()[index])){
+            Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
+            this.results.add(singleCharLexeme);
         }
     }
 
@@ -342,21 +345,6 @@ class AnalyzeContext {
         this.results.clear();
         this.segmentBuff = new char[BUFF_SIZE];
         this.pathMap.clear();
-    }
-
-    /**
-     * 后退一步,重置分词上下文状态
-     */
-    void backStep() {
-//		this.buffLocker.clear();
-//		this.orgLexemes = new QuickSortSet();
-//		this.available =0;
-//		this.buffOffset = 0;
-//		this.charTypes = new int[BUFF_SIZE];
-        this.cursor--;
-//		this.results.clear();
-//		this.segmentBuff = new char[BUFF_SIZE];
-//		this.pathMap.clear();
     }
 
     /**

@@ -47,7 +47,7 @@ public class IKAnalzyerDemo {
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-            ts = analyzer.tokenStream("myfield", new StringReader("\\sqrt{x}+\\frac{1}{2}"));
+            ts = analyzer.tokenStream("myfield", new StringReader("‖Ⅰ\tⅡ\tⅢ\tⅣ\tⅤ\tⅥ\tⅦ\tⅧ\tⅨ\tⅩ\tⅪ\tⅫ"));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);
             //获取词元文本属性

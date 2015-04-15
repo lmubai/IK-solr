@@ -4,7 +4,7 @@
 
   <groupId>SearchGroup</groupId>
   <artifactId>IK-solr</artifactId>
-  <version>5.0.0</version>
+  <version>5.0.0-extend</version>
   <packaging>jar</packaging>
 
   <name>IK-solr</name>
