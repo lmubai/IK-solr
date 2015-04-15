@@ -33,7 +33,7 @@ class CharacterUtil {
 	
 	public static final int CHAR_USELESS = 0;
 
-	public static final int CHAR_ASIIC32_126 = 1;
+	public static final int CHAR_CUSTOM = 1;//自定义符号
 	
 	public static final int CHAR_ARABIC = 0X00000001;
 	
@@ -58,8 +58,7 @@ class CharacterUtil {
 			
 		}else {
 			Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
-			
-			if(ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS  
+			if(ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
 					|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS  
 					|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A){
 				//目前已知的中文字符UTF-8集合
@@ -99,5 +98,23 @@ class CharacterUtil {
 		}
         
         return input;
+	}
+
+	/**
+	 * 自定义词典支持的符号,特殊符号字符集
+	 */
+	public static boolean acceptChar(char input){
+		Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
+		if(ub == Character.UnicodeBlock.BASIC_LATIN //0020-007F	基本拉丁文
+				|| ub == Character.UnicodeBlock.LATIN_1_SUPPLEMENT //拉丁文补充-1:¬°±等
+				|| (input>=0x390 && input<=0x3A9) //0390-03A9 大写希腊字母
+				|| (input>=0x3B0 && input<=0x3C9) //03B0-03C9 小写希腊字母
+				|| ub == Character.UnicodeBlock.ARROWS //2190-21FF 箭头符号
+				|| ub == Character.UnicodeBlock.MATHEMATICAL_OPERATORS //2200-22FF 数学运算符
+				|| ub == Character.UnicodeBlock.GEOMETRIC_SHAPES //25A0-25FF 几何图形
+				){
+			return true;
+		}
+		return false;
 	}
 }
