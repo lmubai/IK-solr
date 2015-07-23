@@ -34,8 +34,10 @@ class LetterSegmenter implements ISegmenter {
 	
 	//子分词器标签
 	static final String SEGMENTER_NAME = "LETTER_SEGMENTER";
-	//链接符号
+	//链接符号 2015年07月23日 14:01:35 去除'.'号
+//	private static final char[] Letter_Connector = new char[]{'#' , '&' , '+' , '-' , '@' , '_'};
 	private static final char[] Letter_Connector = new char[]{'#' , '&' , '+' , '-' , '.' , '@' , '_'};
+
 	
 	//数字符号
 	private static final char[] Num_Connector = new char[]{',' , '.'};
@@ -128,7 +130,8 @@ class LetterSegmenter implements ISegmenter {
 		
 		if(this.start == -1){//当前的分词器尚未开始处理字符
 			if(CharacterUtil.CHAR_ARABIC == context.getCurrentCharType()
-					|| CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()){
+					|| CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()
+					|| this.isLetterConnector(context.getCurrentChar())){
 				//记录起始指针的位置,标明分词器进入处理状态
 				this.start = context.getCursor();
 				this.end = start;
