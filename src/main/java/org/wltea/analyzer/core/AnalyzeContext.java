@@ -23,7 +23,6 @@
  */
 package org.wltea.analyzer.core;
 
-import org.wltea.analyzer.cfg.Configuration;
 import org.wltea.analyzer.dic.Dictionary;
 
 import java.io.IOException;
@@ -69,14 +68,13 @@ class AnalyzeContext {
     //最终分词结果集
     private LinkedList<Lexeme> results;
 
-    //分词器配置项
-    private Configuration cfg;
+    private boolean useSmart;
 
     public AnalyzeContext() {
     }
 
-    public AnalyzeContext(Configuration cfg) {
-        this.cfg = cfg;
+    public AnalyzeContext(boolean useSmart) {
+        this.useSmart = useSmart;
         this.segmentBuff = new char[BUFF_SIZE];
         this.charTypes = new int[BUFF_SIZE];
         this.buffLocker = new HashSet<String>();
@@ -351,7 +349,7 @@ class AnalyzeContext {
      * 组合词元
      */
     private void compound(Lexeme result) {
-        if (!this.cfg.useSmart()) {
+        if (!useSmart) {
             return;
         }
         //数量词合并处理

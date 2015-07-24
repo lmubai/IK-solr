@@ -24,14 +24,8 @@
  */
 package org.wltea.analyzer.lucene;
 
-import com.sun.xml.internal.messaging.saaj.util.CharReader;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter;
-import org.apache.lucene.queryparser.classic.CharStream;
-
-import java.io.Reader;
 
 /**
  * IK分词器，Lucene Analyzer接口实现
