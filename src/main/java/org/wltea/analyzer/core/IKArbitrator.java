@@ -86,7 +86,6 @@ class IKArbitrator {
      * 歧义识别
      * @param lexemeCell 歧义路径链表头
      * @param fullTextLength 歧义路径文本长度
-     * @param option 候选结果路径
      * @return
      */
     private LexemePath judge(QuickSortSet.Cell lexemeCell, int fullTextLength) {

@@ -300,10 +300,11 @@ class AnalyzeContext {
         } else if (CharacterUtil.CHAR_OTHER_CJK == this.charTypes[index]) {
             Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
             this.results.add(singleCharLexeme);
-        } else if(CharacterUtil.acceptChar(this.getSegmentBuff()[index])){
-            Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
-            this.results.add(singleCharLexeme);
         }
+//        else if(CharacterUtil.acceptChar(this.getSegmentBuff()[index])){
+//            Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
+//            this.results.add(singleCharLexeme);
+//        }
     }
 
     /**
