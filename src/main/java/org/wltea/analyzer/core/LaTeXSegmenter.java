@@ -30,24 +30,26 @@ public class LaTeXSegmenter implements ISegmenter {
     private int braceStart;
 
     private boolean buffEqual(AnalyzeContext context, String s) {
-        char[] buff = context.getSegmentBuff();
-        char[] chars = s.toCharArray();
-        if (buff.length >= chars.length) {
-            for (int i = 0; i < chars.length; i++) {
-                if (chars[i] != buff[context.getCursor() + i]) {
-                    return false;
-                }
-            }
-        } else {
-            return false;
+        if (context.getSegmentBuff().length > (context.getCursor() + s.length())) {
+            return s.equals(String.copyValueOf(context.getSegmentBuff(), context.getCursor(), s.length()));
         }
-        return true;
+        return false;
     }
 
     private boolean oneEqual(AnalyzeContext context, char... chars) {
         for (char c : chars.clone()) {
             if (c == context.getCurrentChar())
                 return true;
+        }
+        return false;
+    }
+
+    private boolean buffAroundEqual(AnalyzeContext context, String s) {
+        char[] buff = context.getSegmentBuff();
+        for (int i = 0; i < s.length() && i <= context.getCursor(); i++) {
+            if (s.equals(String.copyValueOf(buff, context.getCursor() - i, s.length()))) {
+                return true;
+            }
         }
         return false;
     }
@@ -69,10 +71,13 @@ public class LaTeXSegmenter implements ISegmenter {
     private void onlyNumberLetterPB(AnalyzeContext context) {
         if (onlyStart == -1) {
             if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
-                this.onlyStart = context.getCursor();
+                if (!(buffAroundEqual(context, "\\sqrt") || buffAroundEqual(context, "\\frac"))) {
+                    this.onlyStart = context.getCursor();
+                }
             }
         } else {
             if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType() ||
+                    (context.getCurrentChar() >= 0x3B0 && context.getCurrentChar() <= 0x3C9) ||
                     oneEqual(context, '^', '{', '}', '_')) {
                 if ('{' == context.getCurrentChar()) {
                     onlyBrace++;
@@ -82,15 +87,17 @@ public class LaTeXSegmenter implements ISegmenter {
                         Lexeme newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart, Lexeme.TYPE_LATEX);
                         context.addLexeme(newLexeme);
                         this.onlyStart = -1;
+                        onlyBrace = 0;
                     }
                 }
             } else {
                 Lexeme newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart, Lexeme.TYPE_LATEX);
                 context.addLexeme(newLexeme);
-                if (oneEqual(context, '+', '-', '=')) {
+                if (oneEqual(context, '+', '-', '=', '*', '÷')) {
                     newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart + 1, Lexeme.TYPE_LATEX);
                     context.addLexeme(newLexeme);
                 }
+                onlyBrace = 0;
                 this.onlyStart = -1;
             }
         }
@@ -108,6 +115,7 @@ public class LaTeXSegmenter implements ISegmenter {
 
     /**
      * 花括号内
+     *
      * @param context
      */
     private void bigBraceFormula(AnalyzeContext context) {
@@ -228,5 +236,6 @@ public class LaTeXSegmenter implements ISegmenter {
         this.braceStart = -1;
         this.unBrace = new Stack<Integer>();
         this.onlyStart = -1;
+        this.onlyBrace = 0;
     }
 }
