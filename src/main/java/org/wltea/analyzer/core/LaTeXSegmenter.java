@@ -10,7 +10,7 @@ public class LaTeXSegmenter implements ISegmenter {
     //子分词器标签
     public static final String SEGMENTER_NAME = "LATEX_SEGMENTER";
 
-    private int bigBrace;
+    //未匹配的'{'位置
     private Stack<Integer> unBrace;
 
 
@@ -71,7 +71,7 @@ public class LaTeXSegmenter implements ISegmenter {
     private void onlyNumberLetterPB(AnalyzeContext context) {
         if (onlyStart == -1) {
             if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
-                if (!(buffAroundEqual(context, "\\sqrt") || buffAroundEqual(context, "\\frac"))) {
+                if (!(buffAroundEqual(context, "sqrt") || buffAroundEqual(context, "frac"))) {
                     this.onlyStart = context.getCursor();
                 }
             }
@@ -139,7 +139,7 @@ public class LaTeXSegmenter implements ISegmenter {
      */
     private void sqrtFormula(AnalyzeContext context) {
         if (this.sqrtStart == -1) {
-            if (buffEqual(context, "\\sqrt")) {
+            if (buffEqual(context, "sqrt")) {
                 this.sqrtStart = context.getCursor();
             }
         } else {
@@ -164,7 +164,7 @@ public class LaTeXSegmenter implements ISegmenter {
      */
     private void fracFormula(AnalyzeContext context) {
         if (fracStart == -1) {
-            if (buffEqual(context, "\\frac")) {
+            if (buffEqual(context, "frac")) {
                 this.fracStart = context.getCursor();
             }
         } else {
@@ -232,7 +232,6 @@ public class LaTeXSegmenter implements ISegmenter {
         this.fracElement = 0;
         this.sqrtStart = -1;
         this.sqrtBrace = 0;
-        this.bigBrace = 0;
         this.braceStart = -1;
         this.unBrace = new Stack<Integer>();
         this.onlyStart = -1;
