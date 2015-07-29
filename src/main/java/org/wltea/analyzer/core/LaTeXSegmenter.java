@@ -130,6 +130,10 @@ public class LaTeXSegmenter implements ISegmenter {
                 context.addLexeme(newLexeme);
             }
         }
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            unBrace = new Stack<Integer>();
+        }
     }
 
     /**
@@ -154,6 +158,11 @@ public class LaTeXSegmenter implements ISegmenter {
                     this.sqrtStart = -1;
                 }
             }
+        }
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            this.sqrtStart = -1;
+            sqrtBrace = 0;
         }
     }
 
@@ -184,6 +193,12 @@ public class LaTeXSegmenter implements ISegmenter {
                 }
             }
         }
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            this.fracElement = 0;
+            this.fracStart = -1;
+            this.fracBrace = 0;
+        }
     }
 
     /**
@@ -204,7 +219,10 @@ public class LaTeXSegmenter implements ISegmenter {
                 this.fullFormulaStart = -1;
             }
         }
-
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            this.fullFormulaStart = -1;
+        }
     }
 
     /**
@@ -222,6 +240,10 @@ public class LaTeXSegmenter implements ISegmenter {
         }
         if ('(' == context.getCurrentChar()) {
             this.braceStart = context.getCursor();
+        }
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            this.braceStart = -1;
         }
     }
 

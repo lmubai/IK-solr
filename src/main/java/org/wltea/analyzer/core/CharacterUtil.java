@@ -102,8 +102,8 @@ class CharacterUtil {
      * 自定义词典支持的符号,特殊符号字符集
      */
     public static boolean acceptChar(char input) {
-        if (input <= 0x0020)//不保护空白字符
-            return false;
+//        if (input <= 0x0020)//不保护空白字符
+//            return false;
         Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
         if (ub == Character.UnicodeBlock.BASIC_LATIN //0020-007F	基本拉丁文
                 || ub == Character.UnicodeBlock.LATIN_1_SUPPLEMENT //拉丁文补充-1:¬°±等
