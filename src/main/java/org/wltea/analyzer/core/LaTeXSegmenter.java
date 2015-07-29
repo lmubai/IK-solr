@@ -106,7 +106,7 @@ public class LaTeXSegmenter implements ISegmenter {
         if (context.isBufferConsumed()) {
             if (this.onlyStart != -1) {
                 //缓冲以读完，输出词元
-                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart + 1, Lexeme.TYPE_LETTER);
+                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart + 1, Lexeme.TYPE_LATEX);
                 context.addLexeme(newLexeme);
                 this.onlyStart = -1;
             }
