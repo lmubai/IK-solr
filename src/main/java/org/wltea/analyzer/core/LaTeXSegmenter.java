@@ -71,7 +71,7 @@ public class LaTeXSegmenter implements ISegmenter {
     private void onlyNumberLetterPB(AnalyzeContext context) {
         if (onlyStart == -1) {
             if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
-                if (!(buffAroundEqual(context, "sqrt") || buffAroundEqual(context, "frac"))) {
+                if (!(buffAroundEqual(context, "\\sqrt") || buffAroundEqual(context, "\\frac"))) {
                     this.onlyStart = context.getCursor();
                 }
             }
@@ -139,7 +139,7 @@ public class LaTeXSegmenter implements ISegmenter {
      */
     private void sqrtFormula(AnalyzeContext context) {
         if (this.sqrtStart == -1) {
-            if (buffEqual(context, "sqrt")) {
+            if (buffEqual(context, "\\sqrt")) {
                 this.sqrtStart = context.getCursor();
             }
         } else {
@@ -164,7 +164,7 @@ public class LaTeXSegmenter implements ISegmenter {
      */
     private void fracFormula(AnalyzeContext context) {
         if (fracStart == -1) {
-            if (buffEqual(context, "frac")) {
+            if (buffEqual(context, "\\frac")) {
                 this.fracStart = context.getCursor();
             }
         } else {
