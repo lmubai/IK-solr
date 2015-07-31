@@ -29,6 +29,7 @@ public class LaTeXSegmenter implements ISegmenter {
 
     private int braceStart;
 
+    //char[] Buff 当前位置是否以s开头
     private boolean buffEqual(AnalyzeContext context, String s) {
         if (context.getSegmentBuff().length > (context.getCursor() + s.length())) {
             return s.equals(String.copyValueOf(context.getSegmentBuff(), context.getCursor(), s.length()));
@@ -36,6 +37,7 @@ public class LaTeXSegmenter implements ISegmenter {
         return false;
     }
 
+    //char[] Buff 当前位置是否以chars之一开头
     private boolean oneEqual(AnalyzeContext context, char... chars) {
         for (char c : chars.clone()) {
             if (c == context.getCurrentChar())
@@ -44,6 +46,7 @@ public class LaTeXSegmenter implements ISegmenter {
         return false;
     }
 
+    //char[] Buff 当前位置附件是否与s相等
     private boolean buffAroundEqual(AnalyzeContext context, String s) {
         char[] buff = context.getSegmentBuff();
         for (int i = 0; i < s.length() && i <= context.getCursor(); i++) {
@@ -84,17 +87,17 @@ public class LaTeXSegmenter implements ISegmenter {
                 } else if ('}' == context.getCurrentChar()) {
                     onlyBrace--;
                     if (onlyBrace < 0) {
-                        Lexeme newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart, Lexeme.TYPE_LATEX);
+                        Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart, Lexeme.TYPE_LATEX);
                         context.addLexeme(newLexeme);
                         this.onlyStart = -1;
                         onlyBrace = 0;
                     }
                 }
             } else {
-                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart, Lexeme.TYPE_LATEX);
+                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart, Lexeme.TYPE_LATEX);
                 context.addLexeme(newLexeme);
                 if (oneEqual(context, '+', '-', '=', '*', '÷')) {
-                    newLexeme = new Lexeme(context.getBufferOffset(), onlyStart, context.getCursor() - onlyStart + 1, Lexeme.TYPE_LATEX);
+                    newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart + 1, Lexeme.TYPE_LATEX);
                     context.addLexeme(newLexeme);
                 }
                 onlyBrace = 0;
@@ -235,7 +238,9 @@ public class LaTeXSegmenter implements ISegmenter {
      * @param context
      */
     private void braceFormula(AnalyzeContext context) {
-        if (')' == context.getCurrentChar() && this.braceStart > -1) {
+        if ('(' == context.getCurrentChar()) {
+            this.braceStart = context.getCursor();
+        }else if (')' == context.getCurrentChar() && this.braceStart > -1) {
             Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, context.getCursor() - this.braceStart + 1, Lexeme.TYPE_LATEX);
             context.addLexeme(newLexeme);
             if (context.getCursor() - this.braceStart - 1 > 0) {
@@ -243,9 +248,6 @@ public class LaTeXSegmenter implements ISegmenter {
                 context.addLexeme(newLexeme);
             }
             this.braceStart = -1;
-        }
-        if ('(' == context.getCurrentChar()) {
-            this.braceStart = context.getCursor();
         }
         //判断缓冲区是否已经读完
         if (context.isBufferConsumed()) {
