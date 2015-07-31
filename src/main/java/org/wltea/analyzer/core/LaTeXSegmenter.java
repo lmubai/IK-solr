@@ -127,10 +127,12 @@ public class LaTeXSegmenter implements ISegmenter {
         } else if ('}' == context.getCurrentChar()) {
             if (!unBrace.isEmpty()) {
                 int start = unBrace.pop();
-                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX);
-                context.addLexeme(newLexeme);
+                if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1]) {
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX);
+                    context.addLexeme(newLexeme);
+                }
                 if (context.getCursor() - start - 1 > 0) {
-                    newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX);
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX);
                     context.addLexeme(newLexeme);
                 }
             }
@@ -240,7 +242,7 @@ public class LaTeXSegmenter implements ISegmenter {
     private void braceFormula(AnalyzeContext context) {
         if ('(' == context.getCurrentChar()) {
             this.braceStart = context.getCursor();
-        }else if (')' == context.getCurrentChar() && this.braceStart > -1) {
+        } else if (')' == context.getCurrentChar() && this.braceStart > -1) {
             Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, context.getCursor() - this.braceStart + 1, Lexeme.TYPE_LATEX);
             context.addLexeme(newLexeme);
             if (context.getCursor() - this.braceStart - 1 > 0) {
