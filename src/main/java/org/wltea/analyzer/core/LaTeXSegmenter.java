@@ -126,8 +126,10 @@ public class LaTeXSegmenter implements ISegmenter {
                 int start = unBrace.pop();
                 Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX);
                 context.addLexeme(newLexeme);
-                newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX);
-                context.addLexeme(newLexeme);
+                if (context.getCursor() - start - 1 > 0) {
+                    newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX);
+                    context.addLexeme(newLexeme);
+                }
             }
         }
         //判断缓冲区是否已经读完
@@ -214,8 +216,10 @@ public class LaTeXSegmenter implements ISegmenter {
         } else {//当前分词正在处理整体公式
             if ('$' == context.getCurrentChar()) {
                 //遇到$字符,输出词元
-                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.fullFormulaStart + 1, context.getCursor() - this.fullFormulaStart - 1, Lexeme.TYPE_LATEX);
-                context.addLexeme(newLexeme);
+                if (context.getCursor() - this.fullFormulaStart - 1 > 0) {
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.fullFormulaStart + 1, context.getCursor() - this.fullFormulaStart - 1, Lexeme.TYPE_LATEX);
+                    context.addLexeme(newLexeme);
+                }
                 this.fullFormulaStart = -1;
             }
         }
@@ -234,8 +238,10 @@ public class LaTeXSegmenter implements ISegmenter {
         if (')' == context.getCurrentChar() && this.braceStart > -1) {
             Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, context.getCursor() - this.braceStart + 1, Lexeme.TYPE_LATEX);
             context.addLexeme(newLexeme);
-            newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, context.getCursor() - this.braceStart - 1, Lexeme.TYPE_LATEX);
-            context.addLexeme(newLexeme);
+            if (context.getCursor() - this.braceStart - 1 > 0) {
+                newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, context.getCursor() - this.braceStart - 1, Lexeme.TYPE_LATEX);
+                context.addLexeme(newLexeme);
+            }
             this.braceStart = -1;
         }
         if ('(' == context.getCurrentChar()) {
