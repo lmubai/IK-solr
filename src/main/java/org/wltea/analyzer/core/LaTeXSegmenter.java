@@ -66,9 +66,10 @@ public class LaTeXSegmenter implements ISegmenter {
         onlyNumberLetterPB(context);
     }
 
+
     /**
      * 纯数字字母和上下标
-     *
+     * 2015年8月11日 增加括号支持
      * @param context
      */
     private void onlyNumberLetterPB(AnalyzeContext context) {
@@ -81,7 +82,7 @@ public class LaTeXSegmenter implements ISegmenter {
         } else {
             if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType() ||
                     (context.getCurrentChar() >= 0x3B0 && context.getCurrentChar() <= 0x3C9) ||
-                    oneEqual(context, '^', '{', '}', '_')) {
+                    oneEqual(context, '^', '{', '}', '_','(',')')) {
                 if ('{' == context.getCurrentChar()) {
                     onlyBrace++;
                 } else if ('}' == context.getCurrentChar()) {
