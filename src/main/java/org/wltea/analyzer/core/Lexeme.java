@@ -48,8 +48,20 @@ public class Lexeme implements Comparable<Lexeme> {
     public static final int TYPE_COUNT = 32;
     //中文数量词
     public static final int TYPE_CQUAN = 48;
-
+    //LATEX 公式
     public static final int TYPE_LATEX = 5;
+    public static final int TYPE_LATEX_FRAC = 101;
+    public static final int TYPE_LATEX_FRAC_1 = 102;
+    public static final int TYPE_LATEX_SQRT = 103;
+    public static final int TYPE_LATEX_BRACE = 104;
+    public static final int TYPE_LATEX_BRACE_1 = 105;
+    public static final int TYPE_LATEX_BIGBRACE = 106;
+    public static final int TYPE_LATEX_BIGBRACE_1 = 107;
+    public static final int TYPE_LATEX_ONLYNLPB = 108;
+    public static final int TYPE_LATEX_POWER = 109;
+
+
+
 
     //词元的起始位移
     protected int offset;
@@ -249,6 +261,26 @@ public class Lexeme implements Comparable<Lexeme> {
 
             case TYPE_LATEX:
                 return "TYPE_LATEX";
+
+            case TYPE_LATEX_FRAC:
+                return "TYPE_LATEX_FRAC";
+
+            case TYPE_LATEX_FRAC_1:
+                return "TYPE_LATEX_FRAC_1";
+            case TYPE_LATEX_BRACE:
+                return "TYPE_LATEX_BRACE";
+            case TYPE_LATEX_BRACE_1:
+                return "TYPE_LATEX_BRACE_1";
+            case TYPE_LATEX_SQRT:
+                return "TYPE_LATEX_SQRT";
+            case TYPE_LATEX_BIGBRACE:
+                return "TYPE_LATEX_BIGBRACE";
+            case TYPE_LATEX_BIGBRACE_1:
+                return "TYPE_LATEX_BIGBRACE_1";
+            case TYPE_LATEX_ONLYNLPB:
+                return "TYPE_LATEX_ONLYNLPB";
+            case TYPE_LATEX_POWER:
+                return "TYPE_LATEX_POWER";
 
             default:
                 return "UNKONW";

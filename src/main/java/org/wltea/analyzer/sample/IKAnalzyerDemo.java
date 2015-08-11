@@ -47,8 +47,8 @@ public class IKAnalzyerDemo {
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-            ts = analyzer.tokenStream("myfield", new StringReader("解方程:$\\frac{1}{x}{\\sqrt{xy}}*(-\\frac{1}{3}{\\sqrt{x^{3}y}})$$y=\\sqrt{x-2}+\\sqrt{2-x}-3$,求表达式$(x-\\frac{x-4}{x-3})÷\\frac{x^{2}-4}{x-3}$的值。$\\sqrt{a+4}-\\sqrt{9-a}+\\sqrt{-a^{2}}$"));
-//            ts = analyzer.tokenStream("myfield", new StringReader("45^{°}"));
+//            ts = analyzer.tokenStream("myfield", new StringReader("解方程:$\\frac{1}{x}{\\sqrt{xy}}*(-\\frac{1}{3}{\\sqrt{x^{3}y}})$$y=\\sqrt{x-2}+\\sqrt{2-x}-3$,求表达式$(x-\\frac{x-4}{x-3})÷\\frac{x^{2}-4}{x-3}$的值。$\\sqrt{a+4}-\\sqrt{9-a}+\\sqrt{-a^{2}}$"));
+            ts = analyzer.tokenStream("myfield", new StringReader("16(m+n)^{2}"));
 //            ts = analyzer.tokenStream("myfield",new StringReader("   +4 "));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);
