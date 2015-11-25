@@ -129,14 +129,13 @@ public class LaTeXSegmenter implements ISegmenter {
         } else if ('}' == context.getCurrentChar()) {
             if (!unBrace.isEmpty()) {
                 int start = unBrace.pop();
-                if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1]) {
+                //fixbug 括号内必须有内容 2015年11月25日
+                if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1] && context.getCursor() - start - 1 > 3) {
                     Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX_BIGBRACE);
                     context.addLexeme(newLexeme);
                 }
-                if (context.getCursor() - start - 1 > 1) {
-                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE);
-                    context.addLexeme(newLexeme);
-                }
+                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE);
+                context.addLexeme(newLexeme);
             }
         }
         //判断缓冲区是否已经读完
@@ -246,13 +245,12 @@ public class LaTeXSegmenter implements ISegmenter {
     private void braceFormula(AnalyzeContext context) {
         if ('(' == context.getCurrentChar()) {
             this.braceStart = context.getCursor();
-        } else if (')' == context.getCurrentChar() && this.braceStart > -1) {
+        } else if (')' == context.getCurrentChar() && this.braceStart > -1 && context.getCursor() - this.braceStart - 1 > 2) {
+            //fixed ()内必须有内容 2015年11月25日
             Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, context.getCursor() - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
             context.addLexeme(newLexeme);
-            if (context.getCursor() - this.braceStart - 1 > 1) {
-                newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, context.getCursor() - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
-                context.addLexeme(newLexeme);
-            }
+            newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, context.getCursor() - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
+            context.addLexeme(newLexeme);
             this.braceStart = -1;
         }
         //判断缓冲区是否已经读完
