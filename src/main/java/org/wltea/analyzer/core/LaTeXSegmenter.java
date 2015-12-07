@@ -10,25 +10,16 @@ public class LaTeXSegmenter implements ISegmenter {
     //子分词器标签
     public static final String SEGMENTER_NAME = "LATEX_SEGMENTER";
 
-    //未匹配的'{'位置
-    private Stack<Integer> unBrace;
-
-
-    //整体公式起始结束位置
-    private int fullFormulaStart;
-
-    private int fracStart;
-    private int fracBrace;
-    private int fracElement;
-
-    private int sqrtStart;
-    private int sqrtBrace;
-
-    private int onlyStart;
-    private int onlyBrace;
-
-    private int braceStart;
-
+    public void analyze(AnalyzeContext context) {
+        //不以$为分词临界
+        percentFormula(context);
+        fullFormula(context);
+        fracFormula(context);
+        sqrtFormula(context);
+        braceFormula(context);
+        bigBraceFormula(context);
+        onlyNumberLetterPB(context);
+    }
 
     //char[] Buff 当前位置是否以s开头
     private boolean buffEqual(AnalyzeContext context, String s) {
@@ -47,7 +38,7 @@ public class LaTeXSegmenter implements ISegmenter {
         return false;
     }
 
-    //char[] Buff 当前位置附件是否与s相等
+    //char[] Buff 当前位置附近是否与s相等
     private boolean buffAroundEqual(AnalyzeContext context, String s) {
         char[] buff = context.getSegmentBuff();
         for (int i = 0; i < s.length() && i <= context.getCursor(); i++) {
@@ -58,14 +49,8 @@ public class LaTeXSegmenter implements ISegmenter {
         return false;
     }
 
-    public void analyze(AnalyzeContext context) {
-        fullFormula(context);
-        fracFormula(context);
-        sqrtFormula(context);
-        braceFormula(context);
-        bigBraceFormula(context);
-        onlyNumberLetterPB(context);
-    }
+    private int onlyStart;
+    private int onlyBrace;
 
     /**
      * 纯数字字母和上下标
@@ -118,6 +103,9 @@ public class LaTeXSegmenter implements ISegmenter {
         }
     }
 
+    //未匹配的'{'位置
+    private Stack<Integer> unBrace;
+
     /**
      * 花括号内
      *
@@ -129,13 +117,18 @@ public class LaTeXSegmenter implements ISegmenter {
         } else if ('}' == context.getCurrentChar()) {
             if (!unBrace.isEmpty()) {
                 int start = unBrace.pop();
-                //fixbug 括号内必须有内容 2015年11月25日
-                if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1] && context.getCursor() - start - 1 > 3) {
-                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX_BIGBRACE);
+                //fix bug {}多余
+                //fix bug 括号内必须有内容 2015年11月25日
+                //if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1] && context.getCursor() - start - 1 > 3) {
+                //    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX_BIGBRACE);
+                //    context.addLexeme(newLexeme);
+                //}
+
+                //fix bug 词元长度>0
+                if (context.getCursor() - start - 1 > 0) {
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE_1);
                     context.addLexeme(newLexeme);
                 }
-                Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE);
-                context.addLexeme(newLexeme);
             }
         }
         //判断缓冲区是否已经读完
@@ -144,6 +137,8 @@ public class LaTeXSegmenter implements ISegmenter {
         }
     }
 
+    private int sqrtStart;
+    private int sqrtBrace;
     /**
      * 开方
      *
@@ -173,6 +168,10 @@ public class LaTeXSegmenter implements ISegmenter {
             sqrtBrace = 0;
         }
     }
+
+    private int fracStart;
+    private int fracBrace;
+    private int fracElement;
 
     /**
      * 分式及分子
@@ -211,6 +210,9 @@ public class LaTeXSegmenter implements ISegmenter {
         }
     }
 
+    //整体公式起始结束位置
+    private int fullFormulaStart;
+
     /**
      * 整体公式$$之间的内容
      *
@@ -237,6 +239,8 @@ public class LaTeXSegmenter implements ISegmenter {
         }
     }
 
+    private int braceStart;
+
     /**
      * 小括号(**)与**
      *
@@ -259,6 +263,35 @@ public class LaTeXSegmenter implements ISegmenter {
         }
     }
 
+    private int percentStart;
+
+    /**
+     * 百分数
+     *
+     * @param context
+     */
+    private void percentFormula(AnalyzeContext context) {
+        if (percentStart == -1) {
+            if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType()) {
+                percentStart = context.getCursor();
+            }
+        } else {
+            if (context.getCurrentChar() == '%') {
+                Lexeme percentLexeme = new Lexeme(context.getBufferOffset(), this.percentStart, context.getCursor() - this.percentStart + 1, Lexeme.TYPE_LATEX);
+                context.addLexeme(percentLexeme);
+                this.percentStart = -1;
+            }
+            if (CharacterUtil.CHAR_ARABIC != context.getCurrentCharType() &&
+                    context.getCurrentChar() != '.') {
+                this.percentStart = -1;
+            }
+        }
+        //判断缓冲区是否已经读完
+        if (context.isBufferConsumed()) {
+            this.percentStart = -1;
+        }
+    }
+
     /**
      * //context后为运算符，也成词
      *
@@ -268,7 +301,7 @@ public class LaTeXSegmenter implements ISegmenter {
     private void addOperatorFormula(AnalyzeContext context, int start) {
         if (!context.isBufferConsumed()) {
             char c = context.getSegmentBuff()[context.getCursor() + 1];
-            if (c == '+' || c == '-' || c == '*' || c == '÷' || c == '=') {
+            if (c == '+' || c == '-' || c == '*' || c == '÷' || c == '=' || c == '%') {
                 Lexeme lexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1 + 1, Lexeme.TYPE_LATEX);
                 context.addLexeme(lexeme);
             }
@@ -286,6 +319,7 @@ public class LaTeXSegmenter implements ISegmenter {
         this.unBrace = new Stack<Integer>();
         this.onlyStart = -1;
         this.onlyBrace = 0;
+        this.percentStart = -1;
     }
 
 }

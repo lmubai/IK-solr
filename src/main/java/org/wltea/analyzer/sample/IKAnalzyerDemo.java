@@ -42,13 +42,13 @@ public class IKAnalzyerDemo {
 
     public static void main(String[] args) {
         //构建IK分词器，使用smart分词模式
-        Analyzer analyzer = new IKAnalyzer(true);
+        Analyzer analyzer = new IKAnalyzer(false);
 
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-//            ts = analyzer.tokenStream("myfield", new StringReader("解方程:$\\frac{1}{x}{\\sqrt{xy}}*(-\\frac{1}{3}{\\sqrt{x^{3}y}})$$y=\\sqrt{x-2}+\\sqrt{2-x}-3$,求表达式$(x-\\frac{x-4}{x-3})÷\\frac{x^{2}-4}{x-3}$的值。$\\sqrt{a+4}-\\sqrt{9-a}+\\sqrt{-a^{2}}$"));
-            ts = analyzer.tokenStream("myfield", new StringReader("16(m+n)^{2}"));
+            ts = analyzer.tokenStream("myfield", new StringReader("\\frac{1}{2} 90% (2x+y)^{2} {} 0.8×1{0}^{3}kg/{m}^{3}"));
+//            ts = analyzer.tokenStream("myfield", new StringReader("16(m+n)^{2}"));
 //            ts = analyzer.tokenStream("myfield",new StringReader("   +4 "));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);
@@ -79,7 +79,6 @@ public class IKAnalzyerDemo {
                 }
             }
         }
-
     }
 
 }

@@ -309,6 +309,10 @@ class AnalyzeContext {
             Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
             this.results.add(singleCharLexeme);
         } else if (0x0020!=this.getSegmentBuff()[index]&&
+                '{'!=this.getSegmentBuff()[index]&&
+                '}'!=this.getSegmentBuff()[index]&&
+                '('!=this.getSegmentBuff()[index]&&
+                ')'!=this.getSegmentBuff()[index]&&
                 CharacterUtil.CHAR_ARABIC != this.charTypes[index] &&
                 CharacterUtil.CHAR_ENGLISH != this.charTypes[index] &&
                 CharacterUtil.acceptChar(this.getSegmentBuff()[index])) {

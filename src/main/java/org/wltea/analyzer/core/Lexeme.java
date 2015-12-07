@@ -49,7 +49,7 @@ public class Lexeme implements Comparable<Lexeme> {
     //中文数量词
     public static final int TYPE_CQUAN = 48;
     //LATEX 公式
-    public static final int TYPE_LATEX = 5;
+    public static final int TYPE_LATEX = 100;
     public static final int TYPE_LATEX_FRAC = 101;
     public static final int TYPE_LATEX_FRAC_1 = 102;
     public static final int TYPE_LATEX_SQRT = 103;
