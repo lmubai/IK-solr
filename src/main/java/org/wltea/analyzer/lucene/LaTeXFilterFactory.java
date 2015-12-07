@@ -9,8 +9,11 @@ import java.util.Map;
  * Created by 易斌鑫 on 15-12-7.
  */
 public class LaTeXFilterFactory extends TokenFilterFactory {
-    protected LaTeXFilterFactory(Map<String, String> args) {
+    public LaTeXFilterFactory(Map<String, String> args) {
         super(args);
+        if(!args.isEmpty()) {
+            throw new IllegalArgumentException("Unknown parameters: " + args);
+        }
     }
 
     @Override

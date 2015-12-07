@@ -39,6 +39,6 @@ public class LaTeXFilter extends TokenFilter{
                 this.termAtt.setLength(upto);
             }
         }
-        return false;
+        return true;
     }
 }
