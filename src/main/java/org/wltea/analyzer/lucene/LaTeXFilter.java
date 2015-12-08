@@ -32,7 +32,7 @@ public class LaTeXFilter extends TokenFilter {
                     char c = buffer[i];
                     if (c != 32 && c != 123 && c != 125) {
                         buffer[upto++] = c;
-                    } else if (i + 1 < bufferLength && c == 123 && buffer[i + 1] == 125) {
+                    } else if (i + 1 < bufferLength && c == 125 && buffer[i + 1] == 123) {
                         //用空格代替}{
                         buffer[upto++] = 32;
                     }
