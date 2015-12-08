@@ -264,8 +264,7 @@ class AnalyzeContext {
         int index = 0;
         for (; index <= this.cursor; ) {
             //跳过非CJK字符
-            //但不跳过数学特殊字符
-            if (CharacterUtil.CHAR_USELESS == this.charTypes[index] && !(CharacterUtil.acceptChar(this.getCurrentChar()))) {
+            if (CharacterUtil.CHAR_USELESS == this.charTypes[index]) {
                 index++;
                 continue;
             }
@@ -308,14 +307,13 @@ class AnalyzeContext {
         } else if (CharacterUtil.CHAR_OTHER_CJK == this.charTypes[index]) {
             Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
             this.results.add(singleCharLexeme);
-        } else if (0x0020!=this.getSegmentBuff()[index]&&
-                '{'!=this.getSegmentBuff()[index]&&
-                '}'!=this.getSegmentBuff()[index]&&
-                '('!=this.getSegmentBuff()[index]&&
-                ')'!=this.getSegmentBuff()[index]&&
+        } else if (0x0020 != this.getSegmentBuff()[index] &&
+                '{' != this.getSegmentBuff()[index] &&
+                '}' != this.getSegmentBuff()[index] &&
+                '(' != this.getSegmentBuff()[index] &&
+                ')' != this.getSegmentBuff()[index] &&
                 CharacterUtil.CHAR_ARABIC != this.charTypes[index] &&
-                CharacterUtil.CHAR_ENGLISH != this.charTypes[index] &&
-                CharacterUtil.acceptChar(this.getSegmentBuff()[index])) {
+                CharacterUtil.CHAR_ENGLISH != this.charTypes[index]) {
             Lexeme singleCharLexeme = new Lexeme(this.buffOffset, index, 1, Lexeme.TYPE_OTHER_CJK);
             this.results.add(singleCharLexeme);
         }

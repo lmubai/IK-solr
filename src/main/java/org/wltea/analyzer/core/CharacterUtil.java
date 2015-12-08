@@ -97,26 +97,4 @@ class CharacterUtil {
 
         return input;
     }
-
-    /**
-     * 自定义词典支持的符号,特殊符号字符集
-     */
-    public static boolean acceptChar(char input) {
-//        if (input <= 0x0020)//不保护空白字符
-//            return false;
-        Character.UnicodeBlock ub = Character.UnicodeBlock.of(input);
-        if (ub == Character.UnicodeBlock.BASIC_LATIN //0020-007F	基本拉丁文
-                || ub == Character.UnicodeBlock.LATIN_1_SUPPLEMENT //拉丁文补充-1:¬°±等
-                || (input >= 0x390 && input <= 0x3A9) //0390-03A9 大写希腊字母
-                || (input >= 0x3B0 && input <= 0x3C9) //03B0-03C9 小写希腊字母
-                || ub == Character.UnicodeBlock.ARROWS //2190-21FF 箭头符号
-                || ub == Character.UnicodeBlock.MATHEMATICAL_OPERATORS //2200-22FF 数学运算符
-                || ub == Character.UnicodeBlock.GEOMETRIC_SHAPES //25A0-25FF 几何图形
-                || input == 0x2016 || (input >= 0x2030 && input <= 0x2034) //‖‰	‱	′	″	‴
-                || (input >= 0x2160 || input <= 0x216B) //Ⅰ	Ⅱ	Ⅲ	Ⅳ	Ⅴ	Ⅵ	Ⅶ	Ⅷ	Ⅸ	Ⅹ	Ⅺ	Ⅻ
-                ) {
-            return true;
-        }
-        return false;
-    }
 }

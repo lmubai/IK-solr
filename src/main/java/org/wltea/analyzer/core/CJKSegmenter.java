@@ -51,8 +51,7 @@ class CJKSegmenter implements ISegmenter {
 	 * @see org.wltea.ISegmenter#analyze(org.wltea.AnalyzeContext)
 	 */
 	public void analyze(AnalyzeContext context) {
-//		if(CharacterUtil.CHAR_USELESS != context.getCurrentCharType()){//使IK支持自定义符号
-		if(CharacterUtil.acceptChar(context.getCurrentChar()) ||CharacterUtil.CHAR_USELESS != context.getCurrentCharType()){
+		if(CharacterUtil.CHAR_USELESS != context.getCurrentCharType()){//使IK支持自定义符号
 			//优先处理tmpHits中的hit
 			if(!this.tmpHits.isEmpty()){
 				//处理词段队列

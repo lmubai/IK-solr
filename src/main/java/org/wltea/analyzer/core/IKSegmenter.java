@@ -110,7 +110,6 @@ public final class IKSegmenter {
         //处理中文词的子分词器
         segmenters.add(new CJKSegmenter());
         //处理LaTeX公式分词
-        segmenters.add(new LaTeXSegmenter());
         return segmenters;
     }
 
