@@ -13,13 +13,14 @@ public class LaTeXSegmenter implements ISegmenter {
     public void analyze(AnalyzeContext context) {
         //不以$为分词临界
         percentFormula(context);
-        fullFormula(context);
+        //fullFormula(context);
         fracFormula(context);
         sqrtFormula(context);
         braceFormula(context);
         bigBraceFormula(context);
         onlyNumberLetterPB(context);
     }
+
 
     //char[] Buff 当前位置是否以s开头
     private boolean buffEqual(AnalyzeContext context, String s) {
@@ -59,15 +60,18 @@ public class LaTeXSegmenter implements ISegmenter {
      */
     private void onlyNumberLetterPB(AnalyzeContext context) {
         if (onlyStart == -1) {
-            if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
-                if (!(buffAroundEqual(context, "\\sqrt") || buffAroundEqual(context, "\\frac"))) {
+            if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType()
+                    || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
+                if (!(buffAroundEqual(context, "\\sqrt")
+                        || buffAroundEqual(context, "\\frac"))) {
                     this.onlyStart = context.getCursor();
                 }
             }
         } else {
-            if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType() || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType() ||
-                    (context.getCurrentChar() >= 0x3B0 && context.getCurrentChar() <= 0x3C9) ||
-                    oneEqual(context, '^', '{', '}', '_')) {
+            if (CharacterUtil.CHAR_ARABIC == context.getCurrentCharType()
+                    || CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()
+                    || (context.getCurrentChar() >= 0x3B0 && context.getCurrentChar() <= 0x3C9)
+                    || oneEqual(context, '^', '{', '}', '_')) {
                 if ('{' == context.getCurrentChar()) {
                     onlyBrace++;
                 } else if ('}' == context.getCurrentChar()) {
@@ -114,18 +118,17 @@ public class LaTeXSegmenter implements ISegmenter {
         } else if ('}' == context.getCurrentChar()) {
             if (!unBrace.isEmpty()) {
                 int start = unBrace.pop();
-                //fix bug {}多余
-                //fix bug 括号内必须有内容 2015年11月25日
-                //if (start - 1 > -1 && '$' != context.getSegmentBuff()[start - 1] && context.getCursor() - start - 1 > 3) {
-                //    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1, Lexeme.TYPE_LATEX_BIGBRACE);
-                //    context.addLexeme(newLexeme);
-                //}
-
-                //fix bug 词元长度>0
                 if (context.getCursor() - start - 1 > 0) {
                     Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE_1);
                     context.addLexeme(newLexeme);
+
+                    int pbEnd = getPBEnd(context, context.getCursor());
+                    if (context.getCursor() + 3 < pbEnd) {
+                        newLexeme = new Lexeme(context.getBufferOffset(), start, pbEnd - start, Lexeme.TYPE_LATEX);
+                        context.addLexeme(newLexeme);
+                    }
                 }
+
             }
         }
         //判断缓冲区是否已经读完
@@ -245,20 +248,60 @@ public class LaTeXSegmenter implements ISegmenter {
      * @param context
      */
     private void braceFormula(AnalyzeContext context) {
-        if ('(' == context.getCurrentChar()) {
-            this.braceStart = context.getCursor();
-        } else if (')' == context.getCurrentChar() && this.braceStart > -1 && context.getCursor() - this.braceStart - 1 > 2) {
+        char currentChar = context.getCurrentChar();
+        int cursor = context.getCursor();
+        if (this.braceStart == -1 && '(' == currentChar) {
+            this.braceStart = cursor;
+        } else if (')' == currentChar
+                && cursor - this.braceStart - 1 > 2) {
             //fixed ()内必须有内容 2015年11月25日
-            Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, context.getCursor() - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
+            Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, cursor - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
             context.addLexeme(newLexeme);
-            newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, context.getCursor() - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
+
+            newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, cursor - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
             context.addLexeme(newLexeme);
+
+            //幂低组合
+            int pbend = getPBEnd(context, cursor);
+            if (cursor + 3 < pbend) {
+                newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, pbend - this.braceStart, Lexeme.TYPE_LATEX);
+                context.addLexeme(newLexeme);
+            }
             this.braceStart = -1;
         }
         //判断缓冲区是否已经读完
         if (context.isBufferConsumed()) {
             this.braceStart = -1;
         }
+    }
+
+    /**
+     * 幂低组合,返回结束光标
+     *
+     * @param context
+     * @param start
+     * @return
+     */
+    private int getPBEnd(AnalyzeContext context, int start) {
+        if (start + 2 >= context.getSegmentBuff().length - 1) {
+            return -1;
+        }
+        if ((context.getSegmentBuff()[++start] == '^'
+                || context.getSegmentBuff()[start] == '_')
+                && context.getSegmentBuff()[++start] == '{') {
+            int unMatch = 1;
+            while (unMatch > 0 && start < context.getSegmentBuff().length - 1) {
+                if (context.getSegmentBuff()[start++] == '}') {
+                    unMatch--;
+                } else if (context.getSegmentBuff()[start++] == '{') {
+                    unMatch++;
+                }
+            }
+            if (unMatch > 0) {
+                return -1;
+            }
+        }
+        return start;
     }
 
     private int percentStart;
