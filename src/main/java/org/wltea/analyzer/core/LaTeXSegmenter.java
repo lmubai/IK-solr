@@ -82,11 +82,8 @@ public class LaTeXSegmenter implements ISegmenter {
             } else {
                 Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart, Lexeme.TYPE_LATEX_ONLYNLPB);
                 context.addLexeme(newLexeme);
-                addOperatorFormula(context, onlyStart);
-                if (oneEqual(context, '+', '-', '=', '*', '÷')) {
-                    newLexeme = new Lexeme(context.getBufferOffset(), this.onlyStart, context.getCursor() - this.onlyStart + 1, Lexeme.TYPE_LATEX_ONLYNLPB);
-                    context.addLexeme(newLexeme);
-                }
+                addOperatorFormula(context, onlyStart, context.getCursor());
+
                 onlyBrace = 0;
                 this.onlyStart = -1;
             }
@@ -139,6 +136,7 @@ public class LaTeXSegmenter implements ISegmenter {
 
     private int sqrtStart;
     private int sqrtBrace;
+
     /**
      * 开方
      *
@@ -195,7 +193,7 @@ public class LaTeXSegmenter implements ISegmenter {
                     context.addLexeme(newLexeme);
                     if (fracElement == 2) {
                         //如果分式后为运算符，也成词
-                        addOperatorFormula(context, fracStart);
+                        addOperatorFormula(context, fracStart, context.getCursor());
                         this.fracElement = 0;
                         this.fracStart = -1;
                     }
@@ -298,14 +296,31 @@ public class LaTeXSegmenter implements ISegmenter {
      * @param context
      * @param start
      */
-    private void addOperatorFormula(AnalyzeContext context, int start) {
-        if (!context.isBufferConsumed()) {
-            char c = context.getSegmentBuff()[context.getCursor() + 1];
+    private void addOperatorFormula(AnalyzeContext context, int start, int end) {
+        //后跟运算符
+        char c = context.getSegmentBuff()[end];
+        if (c == '+' || c == '-' || c == '*' || c == '÷' || c == '=' || c == '%') {
+            Lexeme lexeme = new Lexeme(context.getBufferOffset(), start, end - start + 1, Lexeme.TYPE_LATEX);
+            context.addLexeme(lexeme);
+            //前后均为运算符
+            if (start > 0) {
+                c = context.getSegmentBuff()[start - 1];
+                if (c == '+' || c == '-' || c == '*' || c == '÷' || c == '=' || c == '%') {
+                    lexeme = new Lexeme(context.getBufferOffset(), start - 1, end - start + 2, Lexeme.TYPE_LATEX);
+                    context.addLexeme(lexeme);
+                }
+            }
+        }
+
+        //前跟运算符
+        if (start > 0) {
+            c = context.getSegmentBuff()[start - 1];
             if (c == '+' || c == '-' || c == '*' || c == '÷' || c == '=' || c == '%') {
-                Lexeme lexeme = new Lexeme(context.getBufferOffset(), start, context.getCursor() - start + 1 + 1, Lexeme.TYPE_LATEX);
+                Lexeme lexeme = new Lexeme(context.getBufferOffset(), start - 1, end - start + 1, Lexeme.TYPE_LATEX);
                 context.addLexeme(lexeme);
             }
         }
+
     }
 
     public void reset() {
