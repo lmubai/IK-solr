@@ -315,6 +315,28 @@ public class Dictionary {
 	}
 
 	/**
+	 * 检索匹配主词典
+	 *
+	 * @param charArray
+	 * @return Hit 匹配结果描述
+	 */
+	public Hit matchInEnglishDict(char[] charArray) {
+		return singleton._EnglishDict.match(charArray);
+	}
+
+	/**
+	 * 检索匹配主词典
+	 *
+	 * @param charArray
+	 * @param begin
+	 * @param length
+	 * @return Hit 匹配结果描述
+	 */
+	public Hit matchInEnglishDict(char[] charArray, int begin, int length) {
+		return singleton._EnglishDict.match(charArray, begin, length);
+	}
+
+	/**
 	 * 检索匹配量词词典
 	 *
 	 * @param charArray
