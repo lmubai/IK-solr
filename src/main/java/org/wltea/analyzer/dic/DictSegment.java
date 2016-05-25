@@ -106,7 +106,7 @@ class DictSegment implements Comparable<DictSegment>{
 		if(searchHit == null){
 			//如果hit为空，新建
 			searchHit= new Hit();
-			//设置hit的其实文本位置
+			//设置hit的起始文本位置
 			searchHit.setBegin(begin);
 		}else{
 			//否则要将HIT状态重置
@@ -115,7 +115,7 @@ class DictSegment implements Comparable<DictSegment>{
 		//设置hit的当前处理位置
 		searchHit.setEnd(begin);
 		
-		Character keyChar = new Character(charArray[begin]);
+		Character keyChar = charArray[begin];
 		DictSegment ds = null;
 		
 		//引用实例变量为本地变量，避免查询时遇到更新的同步问题
@@ -187,7 +187,7 @@ class DictSegment implements Comparable<DictSegment>{
 	 */
 	private synchronized void fillSegment(char[] charArray , int begin , int length , int enabled){
 		//获取字典表中的汉字对象
-		Character beginChar = new Character(charArray[begin]);
+		Character beginChar = charArray[begin];
 		Character keyChar = charMap.get(beginChar);
 		//字典中没有该字，则将其添加入字典
 		if(keyChar == null){
