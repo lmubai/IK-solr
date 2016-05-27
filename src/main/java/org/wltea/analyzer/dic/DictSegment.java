@@ -114,7 +114,7 @@ class DictSegment implements Comparable<DictSegment>{
 		}
 		//设置hit的当前处理位置
 		searchHit.setEnd(begin);
-		
+
 		Character keyChar = charArray[begin];
 		DictSegment ds = null;
 		

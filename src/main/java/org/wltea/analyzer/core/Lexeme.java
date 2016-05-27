@@ -50,14 +50,25 @@ public class Lexeme implements Comparable<Lexeme> {
     public static final int TYPE_CQUAN = 48;
     //LATEX 公式
     public static final int TYPE_LATEX = 100;
+    //分式\frac{}{}
     public static final int TYPE_LATEX_FRAC = 101;
+    //分子frac{}
     public static final int TYPE_LATEX_FRAC_1 = 102;
+    //根式\sqrt[]{}
     public static final int TYPE_LATEX_SQRT = 103;
+    //次根式\sqrt[]
+    public static final int TYPE_LATEX_SQRT_1 = 103;
+    //(...)
     public static final int TYPE_LATEX_BRACE = 104;
+    //(...)中的...
     public static final int TYPE_LATEX_BRACE_1 = 105;
+    //{...}
     public static final int TYPE_LATEX_BIGBRACE = 106;
+    //{...}中的...
     public static final int TYPE_LATEX_BIGBRACE_1 = 107;
+    //纯数字字母和上下标
     public static final int TYPE_LATEX_ONLYNLPB = 108;
+    //幂次
     public static final int TYPE_LATEX_POWER = 109;
 
 
@@ -267,18 +278,25 @@ public class Lexeme implements Comparable<Lexeme> {
 
             case TYPE_LATEX_FRAC_1:
                 return "TYPE_LATEX_FRAC_1";
+
             case TYPE_LATEX_BRACE:
                 return "TYPE_LATEX_BRACE";
+
             case TYPE_LATEX_BRACE_1:
                 return "TYPE_LATEX_BRACE_1";
+
             case TYPE_LATEX_SQRT:
                 return "TYPE_LATEX_SQRT";
+
             case TYPE_LATEX_BIGBRACE:
                 return "TYPE_LATEX_BIGBRACE";
+
             case TYPE_LATEX_BIGBRACE_1:
                 return "TYPE_LATEX_BIGBRACE_1";
+
             case TYPE_LATEX_ONLYNLPB:
                 return "TYPE_LATEX_ONLYNLPB";
+
             case TYPE_LATEX_POWER:
                 return "TYPE_LATEX_POWER";
 
