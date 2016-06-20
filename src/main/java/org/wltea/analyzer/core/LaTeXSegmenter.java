@@ -8,12 +8,12 @@ import java.util.Stack;
  */
 public class LaTeXSegmenter implements ISegmenter {
 	//子分词器标签
-	public static final String SEGMENTER_NAME = "LATEX_SEGMENTER";
+	static final String SEGMENTER_NAME = "LATEX_SEGMENTER";
 
 	public void analyze(AnalyzeContext context) {
-//        //不以$为分词临界
+		//不以$为分词临界
 		percentFormula(context);
-//        //fullFormula(context);
+		//fullFormula(context);
 		fracFormula(context);
 		sqrtFormula(context);
 		braceFormula(context);
@@ -383,4 +383,17 @@ public class LaTeXSegmenter implements ISegmenter {
 		this.percentStart = -1;
 	}
 
+	LaTeXSegmenter() {
+		this.fullFormulaStart = -1;
+		this.fracStart = -1;
+		this.fracBrace = 0;
+		this.fracElement = 0;
+		this.sqrtStart = -1;
+		this.sqrtBrace = 0;
+		this.braceStart = -1;
+		this.unBrace = new Stack<Integer>();
+		this.onlyStart = -1;
+		this.onlyBrace = 0;
+		this.percentStart = -1;
+	}
 }
