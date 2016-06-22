@@ -396,4 +396,5 @@ class LaTeXSegmenter implements ISegmenter {
 		this.onlyBrace = 0;
 		this.percentStart = -1;
 	}
+
 }

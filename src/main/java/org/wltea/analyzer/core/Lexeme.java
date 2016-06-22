@@ -305,7 +305,7 @@ public class Lexeme implements Comparable<Lexeme> {
 				return "TYPE_LATEX_POWER";
 
 			default:
-				return "UNKONW";
+				return "UNKNOW";
 		}
 	}
 
