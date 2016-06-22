@@ -6,7 +6,7 @@ import java.util.Stack;
  * Created by two8g on 2015/7/27.
  * LaTeX公式分词器
  */
-public class LaTeXSegmenter implements ISegmenter {
+class LaTeXSegmenter implements ISegmenter {
 	//子分词器标签
 	static final String SEGMENTER_NAME = "LATEX_SEGMENTER";
 
