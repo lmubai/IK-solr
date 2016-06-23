@@ -265,10 +265,10 @@ class AnalyzeContext {
 		for (; index <= this.cursor; ) {
 			//跳过非CJK字符
 			//但不跳过数学特殊字符
-			if (CharacterUtil.CHAR_USELESS == this.charTypes[index]) {
-				index++;
-				continue;
-			}
+//			if (CharacterUtil.CHAR_USELESS == this.charTypes[index]) {
+//				index++;
+//				continue;
+//			}
 			//从pathMap找出对应index位置的LexemePath
 			LexemePath path = this.pathMap.get(index);
 			if (path != null) {

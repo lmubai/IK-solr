@@ -255,22 +255,25 @@ class LaTeXSegmenter implements ISegmenter {
 			if ('(' == currentChar) {
 				this.braceStart = cursor;
 			}
-		} else if (')' == currentChar
-				&& cursor - this.braceStart - 1 > 2) {
-			//fixed ()内必须有内容 2015年11月25日
-			Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, cursor - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
-			context.addLexeme(newLexeme);
+		} else {
+			if (')' == currentChar) {
+				if (cursor - this.braceStart - 1 > 2) {
+					//fixed ()内必须有内容 2015年11月25日
+					Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, cursor - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
+					context.addLexeme(newLexeme);
 
-			newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, cursor - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
-			context.addLexeme(newLexeme);
+					Lexeme lexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, cursor - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
+					context.addLexeme(lexeme);
 
-			//幂低组合
-			int pbend = getPBEnd(context, cursor);
-			if (cursor + 3 < pbend) {
-				newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, pbend - this.braceStart, Lexeme.TYPE_LATEX);
-				context.addLexeme(newLexeme);
+					//幂低组合
+					int pbend = getPBEnd(context, cursor);
+					if (cursor + 3 < pbend) {
+						Lexeme lexeme1 = new Lexeme(context.getBufferOffset(), this.braceStart, pbend - this.braceStart, Lexeme.TYPE_LATEX);
+						context.addLexeme(lexeme1);
+					}
+				}
+				this.braceStart = -1;
 			}
-			this.braceStart = -1;
 		}
 		//判断缓冲区是否已经读完
 		if (context.isBufferConsumed()) {
