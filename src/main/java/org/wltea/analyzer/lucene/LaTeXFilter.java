@@ -32,25 +32,29 @@ public class LaTeXFilter extends TokenFilter {
 			}
 			if (type.startsWith("TYPE_LATEX")) {
 				int upto = 0;
+				int cn = 0;
 				for (int i = 0; i < bufferLength; ++i) {
 					char c = buffer[i];
 					//过滤无效字符
+					if (c >= '\u4e00' && c <= '\u9fa5' && c != '、') cn++;
 					if (c == ' ' || c == '$' || Character.isSpaceChar(c)) {
 						continue;
 					}
 					//空格代替{ }
-					if (c == '{' && i != 0) {
-						buffer[upto++] = ' ';
+					if (c == '{') {
 						continue;
 					}
-					if (c == '}' && i < bufferLength - 1) {
-						buffer[upto++] = ' ';
+					if (c == '}') {
+						if (buffer[i + 1] == '{') {
+							buffer[upto++] = ' ';
+							i++;
+						}
 						continue;
 					}
 					buffer[upto++] = c;
 				}
-				if (upto <= 0) {
-					//词长度0,删除
+				if (upto <= 0 || upto > 20 || cn > 8) {
+					//词长度0,删除//词元太长，分词异常，删除
 					return false;
 				} else {
 					this.termAtt.setLength(upto);
