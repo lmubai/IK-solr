@@ -44,10 +44,6 @@ public final class IKSegmenter {
 	private CharArraySet words;
 	//停止词典
 	private CharArraySet stopWords;
-	//英文词典
-	private CharArraySet englishWords;
-	//量词词典
-	private CharArraySet quantifierWords;
 	//分词器上下文
 	private AnalyzeContext context;
 	//分词处理器列表
@@ -87,43 +83,11 @@ public final class IKSegmenter {
 	}
 
 	/**
-	 * IK分词器，由TokenizerFactory提供词典
-	 *
-	 * @param input     Reader
-	 * @param useSmart  为true，使用智能分词策略
-	 * @param words     分词词典
-	 * @param stopWords 停止词词典
-	 */
-	public IKSegmenter(Reader input, boolean useSmart, CharArraySet words, CharArraySet stopWords, CharArraySet englishWords, CharArraySet quantifierWords) {
-		this.input = input;
-		this.useSmart = useSmart;
-		this.words = words;
-		this.stopWords = stopWords;
-		this.englishWords = englishWords;
-		this.quantifierWords = quantifierWords;
-		this.init2();
-	}
-
-	/**
 	 * 初始化
 	 */
 	private void init() {
 		//初始化词典单例
 		Dictionary.initial(this.words, this.stopWords);
-		//初始化分词上下文
-		this.context = new AnalyzeContext(useSmart);
-		//加载子分词器
-		this.segmenters = this.loadSegmenters();
-		//加载歧义裁决器
-		this.arbitrator = new IKArbitrator();
-	}
-
-	/**
-	 * 初始化
-	 */
-	private void init2() {
-		//初始化词典单例
-		Dictionary.initial(this.words, this.stopWords, this.englishWords, this.quantifierWords);
 		//初始化分词上下文
 		this.context = new AnalyzeContext(useSmart);
 		//加载子分词器
@@ -159,8 +123,8 @@ public final class IKSegmenter {
 	public synchronized Lexeme next() throws IOException {
 		Lexeme l;
 		while ((l = context.getNextLexeme()) == null) {
-		    /*
-		     * 从reader中读取数据，填充buffer
+	        /*
+             * 从reader中读取数据，填充buffer
 			 * 如果reader是分次读入buffer的，那么buffer要进行移位处理
 			 * 移位处理上次读入的但未处理的数据
 			 */

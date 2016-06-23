@@ -46,10 +46,6 @@ public class Dictionary {
 
 	private CharArraySet words;
 	private CharArraySet stopWords;
-	//英文词典
-	private CharArraySet englishWords;
-	//量词词典
-	private CharArraySet quantifierWords;
 	/*
 	 * 词典单子实例
 	 */
@@ -83,18 +79,6 @@ public class Dictionary {
 		this.loadExtWord();
 		this.loadStopWord();
 		this.loadQuantifierWord();
-	}
-
-	private Dictionary(CharArraySet words, CharArraySet stopWords, CharArraySet englishWords, CharArraySet quantifierWords) {
-		this.words = words;
-		this.stopWords = stopWords;
-		this.englishWords = englishWords;
-		this.quantifierWords = quantifierWords;
-		_MainDict = new DictSegment((char) 0);
-		this.loadExtWord();
-		this.loadStopWord();
-		this.loadExtEnglishWord();
-		this.loadExtQuantifierWord();
 	}
 
 	/**
@@ -244,38 +228,6 @@ public class Dictionary {
 	}
 
 	/**
-	 * 加载扩展英语词典
-	 */
-	private void loadExtEnglishWord() {
-		_EnglishDict = new DictSegment((char) 0);
-		if (englishWords != null && !englishWords.isEmpty()) {
-			Iterator i$ = englishWords.iterator();
-			while (i$.hasNext()) {
-				Object item = i$.next();
-				if (item instanceof char[]) {
-					_EnglishDict.fillSegment((char[]) item);
-				}
-			}
-		}
-	}
-
-	/**
-	 * 加载扩展量词词典
-	 */
-	private void loadExtQuantifierWord() {
-		_QuantifierDict = new DictSegment((char) 0);
-		if (quantifierWords != null && !quantifierWords.isEmpty()) {
-			Iterator i$ = quantifierWords.iterator();
-			while (i$.hasNext()) {
-				Object item = i$.next();
-				if (item instanceof char[]) {
-					_QuantifierDict.fillSegment((char[]) item);
-				}
-			}
-		}
-	}
-
-	/**
 	 * 词典初始化
 	 * 由于IK Analyzer的词典采用Dictionary类的静态方法进行词典初始化
 	 * 只有当Dictionary类被实际调用时，才会开始载入词典，
@@ -289,27 +241,6 @@ public class Dictionary {
 			synchronized (Dictionary.class) {
 				if (singleton == null) {
 					singleton = new Dictionary(words, stopWords);
-					return singleton;
-				}
-			}
-		}
-		return singleton;
-	}
-
-	/**
-	 * 词典初始化
-	 * 由于IK Analyzer的词典采用Dictionary类的静态方法进行词典初始化
-	 * 只有当Dictionary类被实际调用时，才会开始载入词典，
-	 * 这将延长首次分词操作的时间
-	 * 该方法提供了一个在应用加载阶段就初始化字典的手段
-	 *
-	 * @return Dictionary
-	 */
-	public static Dictionary initial(CharArraySet words, CharArraySet stopWords, CharArraySet englishWords, CharArraySet quantifierWords) {
-		if (singleton == null) {
-			synchronized (Dictionary.class) {
-				if (singleton == null) {
-					singleton = new Dictionary(words, stopWords, englishWords, quantifierWords);
 					return singleton;
 				}
 			}
