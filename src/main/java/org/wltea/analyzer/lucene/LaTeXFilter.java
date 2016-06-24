@@ -37,7 +37,7 @@ public class LaTeXFilter extends TokenFilter {
 					char c = buffer[i];
 					//过滤无效字符
 					if (c >= '\u4e00' && c <= '\u9fa5' && c != '、') cn++;
-					if (c == ' ' || c == '$' || Character.isSpaceChar(c)) {
+					if (c == ' ' || c == '$' || c == '\n' || c == '\r' || c == '\t') {
 						continue;
 					}
 					//空格代替{ }
