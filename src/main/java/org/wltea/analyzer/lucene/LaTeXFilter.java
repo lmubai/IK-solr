@@ -35,25 +35,24 @@ public class LaTeXFilter extends TokenFilter {
 				int cn = 0;
 				for (int i = 0; i < bufferLength; ++i) {
 					char c = buffer[i];
-					//过滤无效字符
-					if (c >= '\u4e00' && c <= '\u9fa5' && c != '、') cn++;
-					if (c == ' ' || c == '$' || c == '\n' || c == '\r' || c == '\t') {
-						continue;
-					}
 					//空格代替{ }
-					if (c == '{') {
+					if (c == '{' || c == ' ' || c == '$' || c == '\n' || c == '\r' || c == '\t') {
 						continue;
-					}
-					if (c == '}') {
+					} else if (c == '}') {
 						if (buffer[i + 1] == '{') {
 							buffer[upto++] = ' ';
 							i++;
 						}
 						continue;
+					} else if (c >= '\u4e00' && c <= '\u9fa5' && c != '、') {
+						cn++;
 					}
 					buffer[upto++] = c;
+					if (cn > 8 || upto > 20) {
+						return false;
+					}
 				}
-				if (upto <= 0 || upto > 20 || cn > 8) {
+				if (upto <= 0) {
 					//词长度0,删除//词元太长，分词异常，删除
 					return false;
 				} else {
