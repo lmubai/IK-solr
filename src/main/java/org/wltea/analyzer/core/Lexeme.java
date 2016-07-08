@@ -70,6 +70,8 @@ public class Lexeme implements Comparable<Lexeme> {
 	public static final int TYPE_LATEX_ONLYNLPB = 108;
 	//幂次
 	public static final int TYPE_LATEX_POWER = 109;
+	//组合
+	public static final int TYPE_COMBINE = 999;
 
 
 	//词元的起始位移
@@ -303,6 +305,9 @@ public class Lexeme implements Comparable<Lexeme> {
 
 			case TYPE_LATEX_POWER:
 				return "TYPE_LATEX_POWER";
+
+			case TYPE_COMBINE:
+				return "TYPE_COMBINE";
 
 			default:
 				return "UNKNOW";

@@ -47,7 +47,7 @@ public class IKAnalzyerDemo {
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-            ts = analyzer.tokenStream("myfield", new StringReader("6月1日"));
+            ts = analyzer.tokenStream("myfield", new StringReader("小璐硫酸亚铁铵是一种浅绿色某实验小组利用镀锌铁片来制备硫酸亚铁铵的过程如下："));
 //            ts = analyzer.tokenStream("myfield",new StringReader("   +4 "));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);

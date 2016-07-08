@@ -321,7 +321,7 @@ class AnalyzeContext {
 	Lexeme getNextLexeme() {
 		//从结果集取出，并移除第一个Lexme
 		Lexeme result = this.results.pollFirst();
-		while (result != null) {
+		/*while (result != null) {
 			//数量词合并
 			this.compound(result);
 			if (Dictionary.getSingleton().isStopWord(this.segmentBuff, result.getBegin(), result.getLength())) {
@@ -332,8 +332,22 @@ class AnalyzeContext {
 				result.setLexemeText(String.valueOf(segmentBuff, result.getBegin(), result.getLength()));
 				break;
 			}
+		}*/
+		while (result != null) {
+			this.compound(result);
+			for (int i = 0; i < this.results.size(); i++) {
+				Lexeme result_i = this.results.get(i);
+				if (result_i.begin == result.begin + result.length) {
+					Lexeme lexeme = new Lexeme(result.offset, result.begin, result.length + result_i.length, Lexeme.TYPE_COMBINE);
+					lexeme.setLexemeText(String.valueOf(segmentBuff, lexeme.getBegin(), lexeme.getLength()));
+					return lexeme;
+				} else if (result_i.begin > result.begin + result.length) {
+					break;
+				}
+			}
+			result = this.results.pollFirst();
 		}
-		return result;
+		return null;
 	}
 
 	/**
