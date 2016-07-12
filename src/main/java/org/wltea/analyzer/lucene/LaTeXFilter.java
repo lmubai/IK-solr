@@ -39,7 +39,7 @@ public class LaTeXFilter extends TokenFilter {
 					if (c == '{' || c == ' ' || c == '$' || c == '\n' || c == '\r' || c == '\t') {
 						continue;
 					} else if (c == '}') {
-						if (buffer[i + 1] == '{') {
+						if (i + 1 < bufferLength && buffer[i + 1] == '{') {
 							buffer[upto++] = ' ';
 							i++;
 						}
