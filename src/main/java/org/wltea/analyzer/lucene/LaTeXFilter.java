@@ -28,7 +28,7 @@ public class LaTeXFilter extends TokenFilter {
 			String type = this.typeAtt.type();
 			if (bufferLength <= 0) {
 				//词长度0,删除
-				return false;
+				this.termAtt.setLength(0);
 			}
 			if (type.startsWith("TYPE_LATEX")) {
 				int upto = 0;
@@ -49,17 +49,56 @@ public class LaTeXFilter extends TokenFilter {
 					}
 					buffer[upto++] = c;
 					if (cn > 8 || upto > 20) {
-						return false;
+						this.termAtt.setLength(0);
+						return true;
 					}
 				}
 				if (upto <= 0) {
 					//词长度0,删除//词元太长，分词异常，删除
-					return false;
+					this.termAtt.setLength(0);
 				} else {
 					this.termAtt.setLength(upto);
 				}
 			}
 		}
 		return true;
+	}
+
+	public static void main(String[] args) {
+		String s = "{\\frac{a}{2}} =\\frac{b}{3} =\\frac{c}{5} (abc ot= 0)";
+		char[] buffer = s.toCharArray();
+		int bufferLength = buffer.length;
+		int upto = 0;
+		int cn = 0;
+		for (int i = 0; i < bufferLength; ++i) {
+			char c = buffer[i];
+			//空格代替{ }
+			if (c == '{' || c == ' ' || c == '$' || c == '\n' || c == '\r' || c == '\t') {
+				continue;
+			} else if (c == '}') {
+				if (i + 1 < bufferLength && buffer[i + 1] == '{') {
+					buffer[upto++] = ' ';
+					i++;
+				}
+				continue;
+			} else if (c >= '\u4e00' && c <= '\u9fa5' && c != '、') {
+				cn++;
+			}
+			buffer[upto++] = c;
+			if (cn > 8 || upto > 20) {
+				System.out.println("===");
+				return;
+			}
+		}
+		if (upto <= 0) {
+			//词长度0,删除//词元太长，分词异常，删除
+			System.out.println("===");
+			return;
+		} else {
+//			this.termAtt.setLength(upto);
+			for (int i = 0; i < upto; i++) {
+				System.out.print(buffer[i]);
+			}
+		}
 	}
 }
