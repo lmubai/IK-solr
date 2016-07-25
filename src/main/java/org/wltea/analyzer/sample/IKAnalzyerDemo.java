@@ -36,7 +36,6 @@ import java.io.StringReader;
 /**
  * 使用IKAnalyzer进行分词的演示
  * 2012-10-22
- *
  */
 public class IKAnalzyerDemo {
 
@@ -47,7 +46,7 @@ public class IKAnalzyerDemo {
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-            ts = analyzer.tokenStream("myfield", new StringReader("{#}"));
+            ts = analyzer.tokenStream("myfield", new StringReader("you are not car a b c"));
 //            ts = analyzer.tokenStream("myfield",new StringReader("   +4 "));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);

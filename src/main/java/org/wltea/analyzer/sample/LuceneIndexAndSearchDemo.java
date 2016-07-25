@@ -47,9 +47,8 @@ import java.io.IOException;
 /**
  * 使用IKAnalyzer进行Lucene索引和查询的演示
  * 2012-3-2
- *
+ * <p>
  * 以下是结合Lucene4.0 API的写法
- *
  */
 public class LuceneIndexAndSearchDemo {
 
@@ -57,6 +56,7 @@ public class LuceneIndexAndSearchDemo {
     /**
      * 模拟：
      * 创建一个单条记录的索引，并对其进行搜索
+     *
      * @param args
      */
     public static void main(String[] args) {

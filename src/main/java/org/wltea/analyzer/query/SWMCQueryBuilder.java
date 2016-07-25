@@ -38,13 +38,14 @@ import java.util.List;
 /**
  * Single Word Multi Char Query Builder
  * IK分词算法专用
- * @author linliangyi
  *
+ * @author linliangyi
  */
 public class SWMCQueryBuilder {
 
     /**
      * 生成SWMCQuery
+     *
      * @param fieldName
      * @param keywords
      * @param quickMode
@@ -63,6 +64,7 @@ public class SWMCQueryBuilder {
 
     /**
      * 分词切分，并返回结链表
+     *
      * @param keywords
      * @return
      */
@@ -83,6 +85,7 @@ public class SWMCQueryBuilder {
 
     /**
      * 根据分词结果生成SWMC搜索
+     *
      * @param fieldName
      * @param lexemes
      * @param quickMode

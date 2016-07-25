@@ -11,7 +11,7 @@ import java.util.Map;
 public class LaTeXFilterFactory extends TokenFilterFactory {
     public LaTeXFilterFactory(Map<String, String> args) {
         super(args);
-        if(!args.isEmpty()) {
+        if (!args.isEmpty()) {
             throw new IllegalArgumentException("Unknown parameters: " + args);
         }
     }

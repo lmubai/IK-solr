@@ -55,8 +55,8 @@ public final class IKTokenizer extends Tokenizer {
     /**
      * Lucene 5.0 Tokenizer适配器类构造函数
      *
-     * @param factory   AttributeFactory
-     * @param useSmart  智能切分
+     * @param factory  AttributeFactory
+     * @param useSmart 智能切分
      */
     public IKTokenizer(AttributeFactory factory, boolean useSmart) {
         super(factory);
@@ -75,6 +75,7 @@ public final class IKTokenizer extends Tokenizer {
 
     /**
      * Lucene 5.0 支持solrcloud词典文件统一管理
+     *
      * @param factory   AttributeFactory
      * @param useSmart  智能切分
      * @param words     分词词典
