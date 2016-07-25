@@ -27,7 +27,11 @@ import org.wltea.analyzer.dic.Dictionary;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 分词器上下文状态
@@ -68,9 +72,6 @@ class AnalyzeContext {
 
     private boolean useSmart;
 
-    public AnalyzeContext() {
-    }
-
     public AnalyzeContext(boolean useSmart) {
         this.useSmart = useSmart;
         this.segmentBuff = new char[BUFF_SIZE];
@@ -84,10 +85,10 @@ class AnalyzeContext {
     int getCursor() {
         return this.cursor;
     }
-//    
-//    void setCursor(int cursor){
-//    	this.cursor = cursor;
-//    }
+
+    void setCursor(int cursor) {
+        this.cursor = cursor;
+    }
 
     char[] getSegmentBuff() {
         return this.segmentBuff;
@@ -182,7 +183,7 @@ class AnalyzeContext {
      * 只要buffLocker中存在segmenterName
      * 则buffer被锁定
      *
-     * @return boolean 缓冲去是否被锁定
+     * @return boolean 缓冲区是否被锁定
      */
     boolean isBufferLocked() {
         return this.buffLocker.size() > 0;
@@ -265,10 +266,10 @@ class AnalyzeContext {
         for (; index <= this.cursor; ) {
             //跳过非CJK字符
             //但不跳过数学特殊字符
-//			if (CharacterUtil.CHAR_USELESS == this.charTypes[index]) {
-//				index++;
-//				continue;
-//			}
+            //if (CharacterUtil.CHAR_USELESS == this.charTypes[index]) {
+            //index++;
+            //continue;
+            //}
             //从pathMap找出对应index位置的LexemePath
             LexemePath path = this.pathMap.get(index);
             if (path != null) {
@@ -355,55 +356,70 @@ class AnalyzeContext {
      * 组合词元
      */
     private void compound(Lexeme result) {
-//        //2016-06-20 屏蔽,始终合并数量词
-//        if (!useSmart) {
-//            return;
-//        }
+        ////2016-06-20 屏蔽,始终合并数量词
+        //if (!useSmart) {
+        //    return;
+        //}
         //数量词合并处理
         if (!this.results.isEmpty()) {
 
             if (Lexeme.TYPE_ARABIC == result.getLexemeType()) {
                 Lexeme nextLexeme = this.results.peekFirst();
-                boolean appendOk = false;
+                //boolean appendOk = false;
                 if (Lexeme.TYPE_CNUM == nextLexeme.getLexemeType()) {
                     //合并英文数词+中文数词
-//                    appendOk = result.append(nextLexeme, Lexeme.TYPE_CNUM);
+                    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CNUM);
                     this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CNUM));
                 } else if (Lexeme.TYPE_COUNT == nextLexeme.getLexemeType()) {
                     //合并英文数词+中文量词
-//                    appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
+                    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
                     this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CQUAN));
-
                 }
-                if (appendOk) {
-                    //弹出
-//                    this.results.pollFirst();
-                }
+                //if (appendOk) {
+                //    //弹出
+                //    this.results.pollFirst();
+                //}
             }
 
             //可能存在第二轮合并
             if (Lexeme.TYPE_CNUM == result.getLexemeType() && !this.results.isEmpty()) {
-                Lexeme nextLexeme = this.results.peekFirst();
-                boolean appendOk = false;
-                if (Lexeme.TYPE_COUNT == nextLexeme.getLexemeType()) {
-                    //合并中文数词+中文量词
-//                    appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
-                    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CQUAN));
+
+                for (int i = 0; i < this.results.size(); i++) {
+                    Lexeme lexeme_i = this.results.get(i);
+                    if (lexeme_i.begin == result.begin + result.length && Lexeme.TYPE_COUNT == lexeme_i.getLexemeType()) {
+                        this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + lexeme_i.length, Lexeme.TYPE_CQUAN));
+                        break;
+                    } else if (lexeme_i.begin > result.begin + result.length) {
+                        break;
+                    }
                 }
-                if (appendOk) {
-                    //弹出
-//                    this.results.pollFirst();
-                }
+
+                //Lexeme nextLexeme = this.results.peekFirst();
+                ////boolean appendOk = false;
+                //if (Lexeme.TYPE_COUNT == nextLexeme.getLexemeType()) {
+                //    //合并中文数词+中文量词
+                //    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
+                //    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CQUAN));
+                //}
+                //if (appendOk) {
+                //    //弹出
+                //    this.results.pollFirst();
+                //}
             }
 
             //英文单词2个及3个的组合
-            if (result.getLexemeType() == Lexeme.TYPE_LETTER && !this.results.isEmpty()) {
+            if (result.getLexemeType() == Lexeme.TYPE_ENGLISH
+                    && !this.results.isEmpty()) {
                 Lexeme next = this.results.get(0);
-                if (next.getLexemeType() == Lexeme.TYPE_LETTER && next.getBegin() == result.getBegin() + result.getLength() + 1) {
+                if (next.getLexemeType() == Lexeme.TYPE_ENGLISH
+                        && next.begin == result.begin + result.length + 1
+                        && this.getSegmentBuff()[next.begin - 1] == ' ') {
                     Lexeme lexeme = new Lexeme(result.offset, result.begin, result.length + 1 + next.length, Lexeme.TYPE_ENGLISH_2);
                     if (this.results.size() >= 2) {
                         Lexeme next2 = this.results.get(1);
-                        if (next2.getLexemeType() == Lexeme.TYPE_LETTER && next2.getBegin() == next.getBegin() + next.getLength() + 1) {
+                        if (next2.getLexemeType() == Lexeme.TYPE_ENGLISH
+                                && next2.begin == next.begin + next.length + 1
+                                && this.getSegmentBuff()[next2.begin - 1] == ' ') {
                             Lexeme lexeme2 = new Lexeme(result.offset, result.begin, result.length + 1 + next.length + 1 + next2.length, Lexeme.TYPE_ENGLISH_3);
                             this.results.addFirst(lexeme2);
                         }

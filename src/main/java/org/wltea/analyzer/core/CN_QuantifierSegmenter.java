@@ -237,7 +237,6 @@ class CN_QuantifierSegmenter implements ISegmenter {
             //输出数词
             Lexeme newLexeme = new Lexeme(context.getBufferOffset(), nStart, nEnd - nStart + 1, Lexeme.TYPE_CNUM);
             context.addLexeme(newLexeme);
-
         }
     }
 

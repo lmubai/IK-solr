@@ -24,7 +24,7 @@
 package org.wltea.analyzer.core;
 
 /**
- * IK分词器专用的Lexem快速排序集合
+ * IK分词器专用的Lexeme快速排序集合
  */
 class QuickSortSet {
     //链表头
@@ -41,7 +41,8 @@ class QuickSortSet {
     /**
      * 向链表集合添加词元
      *
-     * @param lexeme
+     * @param lexeme 待添加词元
+     * @return 是否添加成功
      */
     boolean addLexeme(Lexeme lexeme) {
         Cell newCell = new Cell(lexeme);
@@ -75,9 +76,20 @@ class QuickSortSet {
                 while (index != null && index.compareTo(newCell) > 0) {
                     index = index.prev;
                 }
-                if (index.compareTo(newCell) == 0) {//词元与集合中的词元重复，不放入集合
+                if (index == null) {
                     return false;
-
+                }
+                if (index.compareTo(newCell) == 0) {//词元与集合中的词元重复，不放入集合
+                    // TODO: 16-7-25 重复词元如何处理
+                    if (index.getLexeme().getLexemeType() != newCell.getLexeme().getLexemeType()) {
+                        newCell.prev = index;
+                        newCell.next = index.next;
+                        index.next.prev = newCell;
+                        index.next = newCell;
+                        this.size++;
+                        return true;
+                    }
+                    return false;
                 } else if (index.compareTo(newCell) < 0) {//词元插入链表中的某个位置
                     newCell.prev = index;
                     newCell.next = index.next;
@@ -92,9 +104,9 @@ class QuickSortSet {
     }
 
     /**
-     * 返回链表头部元素
+     * 返回链表头部元素,不删除
      *
-     * @return
+     * @return 头部Lexeme元素
      */
     Lexeme peekFirst() {
         if (this.head != null) {
@@ -104,9 +116,9 @@ class QuickSortSet {
     }
 
     /**
-     * 取出链表集合的第一个元素
+     * 取出链表集合的第一个元素,并返回
      *
-     * @return Lexeme
+     * @return 第一个Lexeme元素
      */
     Lexeme pollFirst() {
         if (this.size == 1) {
@@ -128,7 +140,7 @@ class QuickSortSet {
     /**
      * 返回链表尾部元素
      *
-     * @return
+     * @return 尾部Lexeme对象, 不删除
      */
     Lexeme peekLast() {
         if (this.tail != null) {
@@ -138,18 +150,17 @@ class QuickSortSet {
     }
 
     /**
-     * 取出链表集合的最后一个元素
+     * 取出链表集合的最后一个元素,并返回
      *
-     * @return Lexeme
+     * @return 最后一个Lexeme元素
      */
     Lexeme pollLast() {
         if (this.size == 1) {
-            Lexeme last = this.head.lexeme;
+            Lexeme last = this.tail.lexeme;
             this.head = null;
             this.tail = null;
             this.size--;
             return last;
-
         } else if (this.size > 1) {
             Lexeme last = this.tail.lexeme;
             this.tail = this.tail.prev;
@@ -164,7 +175,7 @@ class QuickSortSet {
     /**
      * 返回集合大小
      *
-     * @return
+     * @return 集合大小
      */
     int size() {
         return this.size;
@@ -173,7 +184,7 @@ class QuickSortSet {
     /**
      * 判断集合是否为空
      *
-     * @return
+     * @return 集合是否为空
      */
     boolean isEmpty() {
         return this.size == 0;
@@ -182,7 +193,7 @@ class QuickSortSet {
     /**
      * 返回lexeme链的头部
      *
-     * @return
+     * @return lexeme链的头部
      */
     Cell getHead() {
         return this.head;

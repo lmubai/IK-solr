@@ -37,16 +37,22 @@ import java.io.StringReader;
  * 使用IKAnalyzer进行分词的演示
  * 2012-10-22
  */
-public class IKAnalzyerDemo {
+public class IKAnalyzerDemo {
 
     public static void main(String[] args) {
+        String test_content = "中文: 简体汉字 没有太多的测试句子, 求解下列方程组的解\n" +
+                "数量词: 二十一世纪 长四十二米约等于六十二寸 十寸" +
+                "English: can't it's not errror words.\n" +
+                "Numbers: 1 2 0.1 3.14 -1 -1.0\n" +
+                "Letter: 100,000 2000-01-01 linliangyi2005@gmail.com" +
+                "Formula: 1+1=2 1<2 1+(-1-1) 0.12+0.34 原点(0,0)";
         //构建IK分词器，使用smart分词模式
         Analyzer analyzer = new IKAnalyzer(false);
 
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
-            ts = analyzer.tokenStream("myfield", new StringReader("you are not car a b c"));
+            ts = analyzer.tokenStream("myfield", new StringReader(test_content));
 //            ts = analyzer.tokenStream("myfield",new StringReader("   +4 "));
             //获取词元位置属性
             OffsetAttribute offset = ts.addAttribute(OffsetAttribute.class);
