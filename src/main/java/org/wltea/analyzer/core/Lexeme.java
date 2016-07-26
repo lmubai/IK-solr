@@ -101,6 +101,17 @@ public class Lexeme implements Comparable<Lexeme> {
         this.lexemeType = lexemeType;
     }
 
+    public Lexeme(int offset, int begin, int length, int lexemeType, String lexemeText) {
+        this.offset = offset;
+        this.begin = begin;
+        if (length < 0) {
+            throw new IllegalArgumentException("length < 0");
+        }
+        this.length = length;
+        this.lexemeType = lexemeType;
+        this.setLexemeText(lexemeText);
+    }
+
     /*
      * 判断词元相等算法
      * 起始位置偏移、起始位置、终止位置相同
@@ -279,40 +290,40 @@ public class Lexeme implements Comparable<Lexeme> {
                 return "COUNT";
 
             case TYPE_CNUM:
-                return "TYPE_CNUM";
+                return "CNUM";
 
             case TYPE_CQUAN:
-                return "TYPE_CQUAN";
+                return "CQUAN";
 
             case TYPE_LATEX:
-                return "TYPE_LATEX";
+                return "LATEX";
 
             case TYPE_LATEX_FRAC:
-                return "TYPE_LATEX_FRAC";
+                return "LATEX_FRAC";
 
             case TYPE_LATEX_FRAC_1:
-                return "TYPE_LATEX_FRAC_1";
+                return "LATEX_FRAC_1";
 
             case TYPE_LATEX_BRACKET:
-                return "TYPE_LATEX_BRACE";
+                return "LATEX_BRACE";
 
             case TYPE_LATEX_BRACKET_1:
-                return "TYPE_LATEX_BRACE_1";
+                return "LATEX_BRACE_1";
 
             case TYPE_LATEX_SQRT:
-                return "TYPE_LATEX_SQRT";
+                return "LATEX_SQRT";
 
             case TYPE_LATEX_BRACE:
-                return "TYPE_LATEX_BIGBRACE";
+                return "LATEX_BIGBRACE";
 
             case TYPE_LATEX_BRACE_1:
-                return "TYPE_LATEX_BIGBRACE_1";
+                return "LATEX_BIGBRACE_1";
 
             case TYPE_LATEX_ONLYNLPB:
-                return "TYPE_LATEX_ONLYNLPB";
+                return "LATEX_ONLYNLPB";
 
             case TYPE_LATEX_POWER:
-                return "TYPE_LATEX_POWER";
+                return "LATEX_POWER";
 
             default:
                 return "UNKNOWN";

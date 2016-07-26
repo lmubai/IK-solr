@@ -329,8 +329,11 @@ class AnalyzeContext {
                 //是停止词继续取列表的下一个
                 result = this.results.pollFirst();
             } else {
-                //不是停止词, 生成lexeme的词元文本,输出
-                result.setLexemeText(String.valueOf(segmentBuff, result.getBegin(), result.getLength()));
+                //不是停止词
+                if (result.getLexemeText() == null || result.getLexemeText().isEmpty()) {
+                    //如果为设置词元文本, 生成lexeme的词元文本,输出
+                    result.setLexemeText(String.valueOf(segmentBuff, result.getBegin(), result.getLength()));
+                }
                 break;
             }
         }

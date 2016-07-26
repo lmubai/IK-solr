@@ -30,7 +30,7 @@ public class LaTeXFilter extends TokenFilter {
                 //词长度0,删除
                 this.termAtt.setLength(0);
             }
-            if (type.startsWith("TYPE_LATEX")) {
+            if (type.contains("LATEX")) {
                 int upto = 0;
                 int cn = 0;
                 for (int i = 0; i < bufferLength; ++i) {

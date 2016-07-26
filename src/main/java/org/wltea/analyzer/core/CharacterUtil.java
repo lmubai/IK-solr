@@ -61,6 +61,7 @@ class CharacterUtil {
                 //目前已知的中文字符UTF-8集合
                 return CHAR_CHINESE;
             } else if (ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS //全角数字字符和日韩字符
+                    //   2016年07月26日 如果不使用,可以屏蔽韩日字符集
                     //韩文字符集
                     || ub == Character.UnicodeBlock.HANGUL_SYLLABLES
                     || ub == Character.UnicodeBlock.HANGUL_JAMO
@@ -68,7 +69,8 @@ class CharacterUtil {
                     //日文字符集
                     || ub == Character.UnicodeBlock.HIRAGANA //平假名
                     || ub == Character.UnicodeBlock.KATAKANA //片假名
-                    || ub == Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS) {
+                    || ub == Character.UnicodeBlock.KATAKANA_PHONETIC_EXTENSIONS
+                    ) {
                 return CHAR_OTHER_CJK;
             }
         }
@@ -89,9 +91,11 @@ class CharacterUtil {
         } else if (input > 65280 && input < 65375) {
             input = (char) (input - 65248);
 
-        } else if (input >= 'A' && input <= 'Z') {
-            input += 32;
         }
+        // 2016年07月26日 屏蔽小写处理
+        //else if (input >= 'A' && input <= 'Z') {
+        //    input += 32;
+        //}
 
         return input;
     }
