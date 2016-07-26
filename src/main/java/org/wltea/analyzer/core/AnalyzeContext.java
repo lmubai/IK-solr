@@ -364,21 +364,39 @@ class AnalyzeContext {
         if (!this.results.isEmpty()) {
 
             if (Lexeme.TYPE_ARABIC == result.getLexemeType()) {
-                Lexeme nextLexeme = this.results.peekFirst();
-                //boolean appendOk = false;
-                if (Lexeme.TYPE_CNUM == nextLexeme.getLexemeType()) {
-                    //合并英文数词+中文数词
-                    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CNUM);
-                    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CNUM));
-                } else if (Lexeme.TYPE_COUNT == nextLexeme.getLexemeType()) {
-                    //合并英文数词+中文量词
-                    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
-                    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CQUAN));
+
+                for (int i = 0; i < this.results.size(); i++) {
+                    Lexeme lexeme_i = this.results.get(i);
+                    if (lexeme_i.begin == result.begin + result.length) {
+                        if (Lexeme.TYPE_CNUM == lexeme_i.getLexemeType()) {
+                            //合并英文数词+中文数词
+                            this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + lexeme_i.length, Lexeme.TYPE_CNUM));
+                            break;
+                        } else if (Lexeme.TYPE_COUNT == lexeme_i.getLexemeType()) {
+                            //合并英文数词+中文量词
+                            this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + lexeme_i.length, Lexeme.TYPE_CQUAN));
+                            break;
+                        }
+                    } else if (lexeme_i.begin > result.begin + result.length) {
+                        break;
+                    }
                 }
-                //if (appendOk) {
-                //    //弹出
-                //    this.results.pollFirst();
+                //
+                //Lexeme nextLexeme = this.results.peekFirst();
+                ////boolean appendOk = false;
+                //if (Lexeme.TYPE_CNUM == nextLexeme.getLexemeType()) {
+                //    //合并英文数词+中文数词
+                //    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CNUM);
+                //    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CNUM));
+                //} else if (Lexeme.TYPE_COUNT == nextLexeme.getLexemeType()) {
+                //    //合并英文数词+中文量词
+                //    //appendOk = result.append(nextLexeme, Lexeme.TYPE_CQUAN);
+                //    this.results.addFirst(new Lexeme(result.offset, result.begin, result.length + nextLexeme.length, Lexeme.TYPE_CQUAN));
                 //}
+                ////if (appendOk) {
+                ////    //弹出
+                ////    this.results.pollFirst();
+                ////}
             }
 
             //可能存在第二轮合并
@@ -408,25 +426,29 @@ class AnalyzeContext {
             }
 
             //英文单词2个及3个的组合
-            if (result.getLexemeType() == Lexeme.TYPE_ENGLISH
+            if ((Lexeme.TYPE_ENGLISH == result.getLexemeType() || Lexeme.TYPE_ENGLISH_2 == result.getLexemeType())
+                    && ' ' == this.getSegmentBuff()[result.begin + result.length]
                     && !this.results.isEmpty()) {
-                Lexeme next = this.results.get(0);
-                if (next.getLexemeType() == Lexeme.TYPE_ENGLISH
-                        && next.begin == result.begin + result.length + 1
-                        && this.getSegmentBuff()[next.begin - 1] == ' ') {
-                    Lexeme lexeme = new Lexeme(result.offset, result.begin, result.length + 1 + next.length, Lexeme.TYPE_ENGLISH_2);
-                    if (this.results.size() >= 2) {
-                        Lexeme next2 = this.results.get(1);
-                        if (next2.getLexemeType() == Lexeme.TYPE_ENGLISH
-                                && next2.begin == next.begin + next.length + 1
-                                && this.getSegmentBuff()[next2.begin - 1] == ' ') {
-                            Lexeme lexeme2 = new Lexeme(result.offset, result.begin, result.length + 1 + next.length + 1 + next2.length, Lexeme.TYPE_ENGLISH_3);
-                            this.results.addFirst(lexeme2);
+                for (int i = 0; i < this.results.size(); i++) {
+                    Lexeme lexeme_i = this.results.get(i);
+                    if (lexeme_i.begin == result.begin + result.length + 1
+                            && Lexeme.TYPE_ENGLISH == lexeme_i.getLexemeType()) {
+                        Lexeme lexeme = new Lexeme(result.offset, result.begin, result.length + 1 + lexeme_i.length, Lexeme.TYPE_ENGLISH);
+                        if (Lexeme.TYPE_ENGLISH == result.getLexemeType()) {
+                            //2个英文单词组合
+                            lexeme.setLexemeType(Lexeme.TYPE_ENGLISH_2);
+                        } else if (Lexeme.TYPE_ENGLISH_2 == result.getLexemeType()) {
+                            //3个英文单词组合
+                            lexeme.setLexemeType(Lexeme.TYPE_ENGLISH_3);
                         }
+                        this.results.addFirst(lexeme);
+                        break;
+                    } else if (lexeme_i.begin > result.begin + result.length + 1) {
+                        break;
                     }
-                    this.results.addFirst(lexeme);
                 }
             }
+
         }
     }
 

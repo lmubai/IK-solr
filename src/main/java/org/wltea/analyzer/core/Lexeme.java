@@ -29,29 +29,31 @@ package org.wltea.analyzer.core;
 public class Lexeme implements Comparable<Lexeme> {
     //lexemeType常量
     //未知
-    public static final int TYPE_UNKNOWN = 0;
-    //英文
-    public static final int TYPE_ENGLISH = 1;
-    //英文2词组
-    public static final int TYPE_ENGLISH_2 = 222;
-    //英文3词组
-    public static final int TYPE_ENGLISH_3 = 333;
+    public static final int TYPE_UNKNOWN = -1;
+    //英文数字混合
+    public static final int TYPE_LETTER = 1;
     //数字
     public static final int TYPE_ARABIC = 2;
-    //英文数字混合
-    public static final int TYPE_LETTER = 3;
     //中文词元
-    public static final int TYPE_CNWORD = 4;
+    public static final int TYPE_CNWORD = 3;
     //日韩文字
-    public static final int TYPE_OTHER_CJK = 8;
-    //中文数词
-    public static final int TYPE_CNUM = 16;
-    //中文量词
-    public static final int TYPE_COUNT = 32;
-    //中文数量词
-    public static final int TYPE_CQUAN = 48;
+    public static final int TYPE_OTHER_CJK = 4;
     //中文单字
-    public static final int TYPE_CNCHAR = 64;
+    public static final int TYPE_CNCHAR = 5;
+    //中文数词
+    public static final int TYPE_CNUM = 6;
+    //中文量词
+    public static final int TYPE_COUNT = 7;
+    //中文数量词
+    public static final int TYPE_CQUAN = 8;
+    //英文
+    public static final int TYPE_ENGLISH = 9;
+    //英文2词组
+    public static final int TYPE_ENGLISH_2 = 10;
+    //英文3词组
+    public static final int TYPE_ENGLISH_3 = 11;
+    //纯数字字母和上下标
+    public static final int TYPE_LATEX_ONLYNLPB = 0;
     //LATEX 公式
     public static final int TYPE_LATEX = 100;
     //分式\frac{}{}
@@ -63,15 +65,13 @@ public class Lexeme implements Comparable<Lexeme> {
     //次根式\sqrt[]
     public static final int TYPE_LATEX_SQRT_1 = 103;
     //(...)
-    public static final int TYPE_LATEX_BRACE = 104;
+    public static final int TYPE_LATEX_BRACKET = 104;
     //(...)中的...
-    public static final int TYPE_LATEX_BRACE_1 = 105;
+    public static final int TYPE_LATEX_BRACKET_1 = 105;
     //{...}
-    public static final int TYPE_LATEX_BIGBRACE = 106;
+    public static final int TYPE_LATEX_BRACE = 106;
     //{...}中的...
-    public static final int TYPE_LATEX_BIGBRACE_1 = 107;
-    //纯数字字母和上下标
-    public static final int TYPE_LATEX_ONLYNLPB = 108;
+    public static final int TYPE_LATEX_BRACE_1 = 107;
     //幂次
     public static final int TYPE_LATEX_POWER = 109;
 
@@ -293,19 +293,19 @@ public class Lexeme implements Comparable<Lexeme> {
             case TYPE_LATEX_FRAC_1:
                 return "TYPE_LATEX_FRAC_1";
 
-            case TYPE_LATEX_BRACE:
+            case TYPE_LATEX_BRACKET:
                 return "TYPE_LATEX_BRACE";
 
-            case TYPE_LATEX_BRACE_1:
+            case TYPE_LATEX_BRACKET_1:
                 return "TYPE_LATEX_BRACE_1";
 
             case TYPE_LATEX_SQRT:
                 return "TYPE_LATEX_SQRT";
 
-            case TYPE_LATEX_BIGBRACE:
+            case TYPE_LATEX_BRACE:
                 return "TYPE_LATEX_BIGBRACE";
 
-            case TYPE_LATEX_BIGBRACE_1:
+            case TYPE_LATEX_BRACE_1:
                 return "TYPE_LATEX_BIGBRACE_1";
 
             case TYPE_LATEX_ONLYNLPB:

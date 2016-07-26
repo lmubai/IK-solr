@@ -53,10 +53,12 @@ class QuickSortSet {
             return true;
 
         } else {
-            if (this.tail.compareTo(newCell) == 0) {//词元与尾部词元相同，不放入集合
-                return false;
-
-            } else if (this.tail.compareTo(newCell) < 0) {//词元接入链表尾部
+            //相同词元需考虑词元类型优先级
+            //if (this.tail.compareTo(newCell) == 0) {//词元与尾部词元相同，不放入集合
+            //    return false;
+            //
+            //} else
+            if (this.tail.compareTo(newCell) < 0) {//词元接入链表尾部
                 this.tail.next = newCell;
                 newCell.prev = this.tail;
                 this.tail = newCell;
@@ -79,14 +81,12 @@ class QuickSortSet {
                 if (index == null) {
                     return false;
                 }
-                if (index.compareTo(newCell) == 0) {//词元与集合中的词元重复，不放入集合
-                    // TODO: 16-7-25 重复词元如何处理
-                    if (index.getLexeme().getLexemeType() != newCell.getLexeme().getLexemeType()) {
-                        newCell.prev = index;
-                        newCell.next = index.next;
-                        index.next.prev = newCell;
-                        index.next = newCell;
-                        this.size++;
+                if (index.compareTo(newCell) == 0) {
+                    // ~~词元与集合中的词元重复，不放入集合~~
+                    // 16-7-25 相同词元需考虑词元类型优先级
+                    if (index.getLexeme().getLexemeType() < newCell.getLexeme().getLexemeType()) {
+                        //覆盖词元类型
+                        index.getLexeme().setLexemeType(newCell.getLexeme().getLexemeType());
                         return true;
                     }
                     return false;

@@ -119,7 +119,7 @@ class LaTeXSegmenter implements ISegmenter {
             if (!unBrace.isEmpty()) {
                 int start = unBrace.pop();
                 if (context.getCursor() - start - 1 > 0) {
-                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BIGBRACE_1);
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), start + 1, context.getCursor() - start - 1, Lexeme.TYPE_LATEX_BRACE_1);
                     context.addLexeme(newLexeme);
 
                     int pbEnd = getPBEnd(context, context.getCursor());
@@ -259,10 +259,10 @@ class LaTeXSegmenter implements ISegmenter {
             if (')' == currentChar) {
                 if (cursor - this.braceStart - 1 > 2) {
                     //fixed ()内必须有内容 2015年11月25日
-                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, cursor - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACE);
+                    Lexeme newLexeme = new Lexeme(context.getBufferOffset(), this.braceStart, cursor - this.braceStart + 1, Lexeme.TYPE_LATEX_BRACKET);
                     context.addLexeme(newLexeme);
 
-                    Lexeme lexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, cursor - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACE_1);
+                    Lexeme lexeme = new Lexeme(context.getBufferOffset(), this.braceStart + 1, cursor - this.braceStart - 1, Lexeme.TYPE_LATEX_BRACKET_1);
                     context.addLexeme(lexeme);
 
                     //幂低组合
