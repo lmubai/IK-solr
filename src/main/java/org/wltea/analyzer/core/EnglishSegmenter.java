@@ -23,6 +23,15 @@ class EnglishSegmenter implements ISegmenter {
     }
 
     public void analyze(AnalyzeContext context) {
+        analyzeEnglishWords(context);
+        if (this.start == -1 && this.end == -1 && !connected) {
+            context.unlockBuffer(SEGMENTER_NAME);
+        } else {
+            context.lockBuffer(SEGMENTER_NAME);
+        }
+    }
+
+    public void analyzeEnglishWords(AnalyzeContext context) {
         if (this.start == -1) {
             if (CharacterUtil.CHAR_ENGLISH == context.getCurrentCharType()) {
                 this.start = context.getCursor();
