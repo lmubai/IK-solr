@@ -216,11 +216,20 @@ class CN_QuantifierSegmenter implements ISegmenter {
         } else {
             //找到一个相邻的数词
             if (!context.getOrgLexemes().isEmpty()) {
-                Lexeme l = context.getOrgLexemes().peekLast();
-                if (Lexeme.TYPE_CNUM == l.getLexemeType() || Lexeme.TYPE_ARABIC == l.getLexemeType()) {
-                    if (l.getBegin() + l.getLength() == context.getCursor()) {
+                //2016年07月26日 判断最后一个词元不准确,因为有很多子分词器
+                //Lexeme l = context.getOrgLexemes().peekLast();
+                //if (Lexeme.TYPE_CNUM == l.getLexemeType() || Lexeme.TYPE_ARABIC == l.getLexemeType()) {
+                //    if (l.getBegin() + l.getLength() == context.getCursor()) {
+                //        return true;
+                //    }
+                //}
+                QuickSortSet.Cell tail = context.getOrgLexemes().getTail();
+                while (tail != null) {
+                    Lexeme l = tail.getLexeme();
+                    if (Lexeme.TYPE_CNUM == l.getLexemeType() || Lexeme.TYPE_ARABIC == l.getLexemeType()) {
                         return true;
                     }
+                    tail = tail.getPrev();
                 }
             }
         }

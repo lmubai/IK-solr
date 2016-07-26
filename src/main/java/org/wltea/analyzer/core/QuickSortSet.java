@@ -200,6 +200,14 @@ class QuickSortSet {
     }
 
     /**
+     * 返回lexeme链的头部
+     *
+     * @return lexeme链的头部
+     */
+    Cell getTail() {
+        return this.tail;
+    }
+    /**
      * IK 中文分词  版本 5.0
      * IK Analyzer release 5.0
      * <p>

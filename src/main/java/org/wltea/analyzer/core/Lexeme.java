@@ -34,12 +34,12 @@ public class Lexeme implements Comparable<Lexeme> {
     public static final int TYPE_LETTER = 1;
     //数字
     public static final int TYPE_ARABIC = 2;
-    //中文词元
-    public static final int TYPE_CNWORD = 3;
+    //中文单字
+    public static final int TYPE_CNCHAR = 3;
     //日韩文字
     public static final int TYPE_OTHER_CJK = 4;
-    //中文单字
-    public static final int TYPE_CNCHAR = 5;
+    //中文词元
+    public static final int TYPE_CNWORD = 5;
     //中文数词
     public static final int TYPE_CNUM = 6;
     //中文量词
