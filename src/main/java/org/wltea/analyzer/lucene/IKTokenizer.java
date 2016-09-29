@@ -28,6 +28,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.search.BoostAttribute;
 import org.apache.lucene.util.AttributeFactory;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
@@ -40,6 +41,9 @@ import java.io.IOException;
  */
 public final class IKTokenizer extends Tokenizer {
 
+    //词元长度计算词元权重
+    private static float[] boots = {0.0f, 0.1f, 1f, 2f, 2f, 4f, 4f, 4f, 4f, 8f};
+
     //IK分词器实现
     private IKSegmenter _IKImplement;
 
@@ -49,6 +53,8 @@ public final class IKTokenizer extends Tokenizer {
     private final OffsetAttribute offsetAtt;
     //词元分类属性（该属性分类参考org.wltea.analyzer.core.Lexeme中的分类常量）
     private final TypeAttribute typeAtt;
+    // 词元权重
+    private final BoostAttribute boostAttribute;
     //记录最后一个词元的结束位置
     private int endPosition;
 
@@ -63,6 +69,7 @@ public final class IKTokenizer extends Tokenizer {
         offsetAtt = addAttribute(OffsetAttribute.class);
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
+        boostAttribute = addAttribute(BoostAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart);
     }
 
@@ -70,6 +77,7 @@ public final class IKTokenizer extends Tokenizer {
         offsetAtt = addAttribute(OffsetAttribute.class);
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
+        boostAttribute = addAttribute(BoostAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart);
     }
 
@@ -86,6 +94,7 @@ public final class IKTokenizer extends Tokenizer {
         offsetAtt = addAttribute(OffsetAttribute.class);
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
+        boostAttribute = addAttribute(BoostAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart, words, stopWords);
     }
 
@@ -109,6 +118,20 @@ public final class IKTokenizer extends Tokenizer {
             endPosition = nextLexeme.getEndPosition();
             //记录词元分类
             typeAtt.setType(nextLexeme.getLexemeTypeString());
+            //设置词元权重
+            if (nextLexeme.getLexemeType() == Lexeme.TYPE_CNWORD
+                    || nextLexeme.getLexemeType() == Lexeme.TYPE_CNCHAR
+                    || nextLexeme.getLexemeType() == Lexeme.TYPE_CNUM
+                    || nextLexeme.getLexemeType() == Lexeme.TYPE_CQUAN
+                    || nextLexeme.getLexemeType() == Lexeme.TYPE_ARABIC)
+                boostAttribute.setBoost(boots[Math.min(boots.length, nextLexeme.getLength())]);
+            else if (nextLexeme.getLexemeType() == Lexeme.TYPE_ENGLISH_2) {
+                boostAttribute.setBoost(2f);
+            } else if (nextLexeme.getLexemeType() == Lexeme.TYPE_ENGLISH_3) {
+                boostAttribute.setBoost(4f);
+            } else {
+                boostAttribute.setBoost(1f);
+            }
             //返会true告知还有下个词元
             return true;
         }

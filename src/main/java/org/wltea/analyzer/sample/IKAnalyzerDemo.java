@@ -28,6 +28,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.search.BoostAttribute;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class IKAnalyzerDemo {
                 "English: can't it's not errror words.\n" +
                 "Numbers: 1 2 0.1 3.14 -1 -1.0 1.1.1.1\n" +
                 "Letter: 100,000 2000-01-01 linliangyi2005@gmail.com\n" +
-                "Formula: 1+1=2 1<2 1+(-1-1) 0.12+0.34 原点(0,0)\n"+
+                "Formula: 1+1=2 1<2 1+(-1-1) 0.12+0.34 原点(0,0)\n" +
                 "Latex: 99.9% △ABC f(x) \\sqrt{2} \\cos A 0..%";
         //构建IK分词器，使用smart分词模式
         Analyzer analyzer = new IKAnalyzer(false);
@@ -61,13 +62,14 @@ public class IKAnalyzerDemo {
             CharTermAttribute term = ts.addAttribute(CharTermAttribute.class);
             //获取词元文本属性
             TypeAttribute type = ts.addAttribute(TypeAttribute.class);
+            BoostAttribute boost = ts.addAttribute(BoostAttribute.class);
 
 
             //重置TokenStream（重置StringReader）
             ts.reset();
             //迭代获取分词结果
             while (ts.incrementToken()) {
-                System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type());
+                System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type() + " weight:" + boost.getBoost());
             }
             //关闭TokenStream（关闭StringReader）
             ts.end();   // Perform end-of-stream operations, e.g. set the final offset.

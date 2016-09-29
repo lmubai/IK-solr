@@ -88,7 +88,7 @@ public class Dictionary {
         //建立一个主词典实例
         _MainDict = new DictSegment((char) 0);
         //读取主词典文件
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(PATH_DIC_MAIN);
+        InputStream is = Dictionary.class.getClassLoader().getResourceAsStream(PATH_DIC_MAIN);
         if (is == null) {
             throw new RuntimeException("Main Dictionary not found!!!");
         }
@@ -127,7 +127,7 @@ public class Dictionary {
         //建立一个主词典实例
         _EnglishDict = new DictSegment((char) 0);
         //读取主词典文件
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(PATH_DIC_ENGLISH);
+        InputStream is = Dictionary.class.getClassLoader().getResourceAsStream(PATH_DIC_ENGLISH);
         if (is == null) {
             throw new RuntimeException("English Dictionary not found!!!");
         }
@@ -165,7 +165,7 @@ public class Dictionary {
         //建立一个量词典实例
         _QuantifierDict = new DictSegment((char) 0);
         //读取量词词典文件
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(PATH_DIC_QUANTIFIER);
+        InputStream is = Dictionary.class.getClassLoader().getResourceAsStream(PATH_DIC_QUANTIFIER);
         if (is == null) {
             throw new RuntimeException("Quantifier Dictionary not found!!!");
         }
