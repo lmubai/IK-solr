@@ -26,12 +26,15 @@ package org.wltea.analyzer.lucene;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PayloadAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.search.BoostAttribute;
 import org.apache.lucene.util.AttributeFactory;
+import org.apache.lucene.util.BytesRef;
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
+import org.wltea.analyzer.util.Utils;
 
 import java.io.IOException;
 
@@ -42,7 +45,7 @@ import java.io.IOException;
 public final class IKTokenizer extends Tokenizer {
 
     //词元长度计算词元权重
-    private static float[] boots = {0.0f, 0.1f, 1f, 2f, 2f, 4f, 4f, 4f, 4f, 8f};
+    private static float[] boosts = {0.0f, 1.0f, 10.0f, 20.0f, 40.0f, 80.0f};
 
     //IK分词器实现
     private IKSegmenter _IKImplement;
@@ -55,6 +58,7 @@ public final class IKTokenizer extends Tokenizer {
     private final TypeAttribute typeAtt;
     // 词元权重
     private final BoostAttribute boostAttribute;
+    private final PayloadAttribute payloadAttribute;
     //记录最后一个词元的结束位置
     private int endPosition;
 
@@ -70,6 +74,7 @@ public final class IKTokenizer extends Tokenizer {
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
         boostAttribute = addAttribute(BoostAttribute.class);
+        payloadAttribute = addAttribute(PayloadAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart);
     }
 
@@ -78,6 +83,7 @@ public final class IKTokenizer extends Tokenizer {
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
         boostAttribute = addAttribute(BoostAttribute.class);
+        payloadAttribute = addAttribute(PayloadAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart);
     }
 
@@ -95,6 +101,7 @@ public final class IKTokenizer extends Tokenizer {
         termAtt = addAttribute(CharTermAttribute.class);
         typeAtt = addAttribute(TypeAttribute.class);
         boostAttribute = addAttribute(BoostAttribute.class);
+        payloadAttribute = addAttribute(PayloadAttribute.class);
         _IKImplement = new IKSegmenter(input, useSmart, words, stopWords);
     }
 
@@ -123,14 +130,18 @@ public final class IKTokenizer extends Tokenizer {
                     || nextLexeme.getLexemeType() == Lexeme.TYPE_CNCHAR
                     || nextLexeme.getLexemeType() == Lexeme.TYPE_CNUM
                     || nextLexeme.getLexemeType() == Lexeme.TYPE_CQUAN
-                    || nextLexeme.getLexemeType() == Lexeme.TYPE_ARABIC)
-                boostAttribute.setBoost(boots[Math.min(boots.length, nextLexeme.getLength())]);
-            else if (nextLexeme.getLexemeType() == Lexeme.TYPE_ENGLISH_2) {
-                boostAttribute.setBoost(2f);
+                    || nextLexeme.getLexemeType() == Lexeme.TYPE_ARABIC) {
+                boostAttribute.setBoost(boosts[Math.min(boosts.length-1, nextLexeme.getLength())]);
+                payloadAttribute.setPayload(new BytesRef(Utils.int2Bytes(nextLexeme.getLength())));
+            } else if (nextLexeme.getLexemeType() == Lexeme.TYPE_ENGLISH_2) {
+                boostAttribute.setBoost(boosts[2]);
+                payloadAttribute.setPayload(new BytesRef(Utils.int2Bytes(2)));
             } else if (nextLexeme.getLexemeType() == Lexeme.TYPE_ENGLISH_3) {
-                boostAttribute.setBoost(4f);
+                boostAttribute.setBoost(boosts[3]);
+                payloadAttribute.setPayload(new BytesRef(Utils.int2Bytes(3)));
             } else {
-                boostAttribute.setBoost(1f);
+                boostAttribute.setBoost(boosts[1]);
+                payloadAttribute.setPayload(new BytesRef(Utils.int2Bytes(1)));
             }
             //返会true告知还有下个词元
             return true;
