@@ -26,8 +26,8 @@ public class LaTeXFilter extends TokenFilter {
             char[] buffer = this.termAtt.buffer();
             int bufferLength = this.termAtt.length();
             String type = this.typeAtt.type();
-            if (bufferLength <= 0) {
-                //词长度0,删除
+            if (bufferLength <= 1) {
+                //词长度1,删除
                 this.termAtt.setLength(0);
             }
             if (type.contains("LATEX")) {
